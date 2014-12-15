@@ -7,10 +7,16 @@ var cache = require('gulp-cached');
 var concat = require('gulp-concat');
 var connect = require('gulp-connect');
 var sourcemaps = require('gulp-sourcemaps');
+var to5 = require("gulp-6to5");
 
 var paths = {
-    styles: 'front/styles/**/*.scss',
-    js: 'front/js/**/*.js'
+    front: {
+        styles: 'front/styles/**/*.scss',
+        js: 'front/js/**/*.js'
+    },
+    back: {
+        js: 'back/**/*.js'
+    }
 };
 
 gulp.task('connect', function() {
@@ -19,26 +25,26 @@ gulp.task('connect', function() {
     });
 });
 
-gulp.task('html', function() {
+gulp.task('front-html', function() {
     gulp.src('front/index.html')
         .pipe(gulp.dest('app/'));
 });
 
-gulp.task('scss', ['scss-lint'], function() {
-    gulp.src(paths.styles)
+gulp.task('front-scss', ['scss-lint'], function() {
+    gulp.src(paths.front.styles)
         .pipe(plumber())
         .pipe(scss())
         .pipe(gulp.dest('dist/styles/'));
 });
 
-gulp.task('scss-lint', function() {
-    gulp.src(paths.styles)
+gulp.task('front-scss-lint', function() {
+    gulp.src(paths.front.styles)
         .pipe(cache('scss-lint'))
         .pipe(scsslint({config: 'scsslint.yml'}));
 });
 
-gulp.task('traceur', function() {
-    return gulp.src(paths.js)
+gulp.task('front-traceur', function() {
+    return gulp.src(paths.front.js)
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(traceur({
@@ -49,10 +55,16 @@ gulp.task('traceur', function() {
         .pipe(gulp.dest('dist/js/'));
 });
 
-gulp.task('watch', function () {
-    gulp.watch(paths.js, ['traceur']);
-    gulp.watch(paths.styles, ['scss']);
-    gulp.watch('front/index.html', ['html']);
+gulp.task('back-6to5', function () {
+    return gulp.src(paths.back.js)
+        .pipe(to5())
+        .pipe(gulp.dest('dist/back/js'));
 });
 
-gulp.task('default', ['scss', 'html', 'traceur', 'watch', 'connect']);
+gulp.task('watch', function () {
+    gulp.watch(paths.front.js, ['front-traceur']);
+    gulp.watch(paths.front.styles, ['front-scss']);
+    gulp.watch('front/index.html', ['front-html']);
+});
+
+gulp.task('default', ['front-scss', 'front-html', 'front-traceur', 'watch', 'connect']);
