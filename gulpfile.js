@@ -8,6 +8,8 @@ var concat = require('gulp-concat');
 var connect = require('gulp-connect');
 var sourcemaps = require('gulp-sourcemaps');
 var to5 = require("gulp-6to5");
+var server = require('gulp-express');
+
 
 var paths = {
     front: {
@@ -37,7 +39,7 @@ gulp.task('front-scss', ['scss-lint'], function() {
         .pipe(gulp.dest('dist/styles/'));
 });
 
-gulp.task('front-scss-lint', function() {
+gulp.task('scss-lint', function() {
     gulp.src(paths.front.styles)
         .pipe(cache('scss-lint'))
         .pipe(scsslint({config: 'scsslint.yml'}));
@@ -58,13 +60,22 @@ gulp.task('front-traceur', function() {
 gulp.task('back-6to5', function () {
     return gulp.src(paths.back.js)
         .pipe(to5())
-        .pipe(gulp.dest('dist/back/js'));
+        .pipe(gulp.dest('dist/node/back/'));
+});
+
+gulp.task('back-server', function () {
+    return server.run({
+        file: 'dist/node/back/api/api.js'
+    });
 });
 
 gulp.task('watch', function () {
+    // Front
     gulp.watch(paths.front.js, ['front-traceur']);
     gulp.watch(paths.front.styles, ['front-scss']);
     gulp.watch('front/index.html', ['front-html']);
+    // Back
+    gulp.watch(paths.back.js, ['back-6to5', 'back-server']);
 });
 
-gulp.task('default', ['front-scss', 'front-html', 'front-traceur', 'watch', 'connect']);
+gulp.task('default', ['front-scss', 'front-html', 'front-traceur', 'back-6to5', 'back-server', 'watch', 'connect']);
