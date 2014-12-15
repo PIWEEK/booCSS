@@ -3,7 +3,9 @@ booCSS
 
 ## Setup initial environment ##
 
-Installing casperjs: http://docs.casperjs.org/en/latest/installation.html
+1. Install phantomjs: 
+2. Install casperjs: http://docs.casperjs.org/en/latest/installation.html
+3. Install npm and dependencies: http://phantomjs.org/download.html
 
 ```
 $ sudo npm install -g gulp
