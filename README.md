@@ -12,3 +12,5 @@ $ sudo npm install -g gulp
 $ npm install
 $ gulp
 ```
+
+4. Install ansi2html from your favourite repo
