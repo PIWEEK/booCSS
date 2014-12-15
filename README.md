@@ -3,7 +3,7 @@ booCSS
 
 ## Setup initial environment ##
 
-1. Install phantomjs: 
+1. Install phantomjs: http://phantomjs.org/download.html
 2. Install casperjs: http://docs.casperjs.org/en/latest/installation.html
 3. Install npm and dependencies: http://phantomjs.org/download.html
 
