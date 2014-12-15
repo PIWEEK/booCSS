@@ -1,20 +1,24 @@
 var gulp = require('gulp');
 var scss = require('gulp-ruby-sass');
 var scsslint = require('gulp-scss-lint');
-var traceur = require('gulp-traceur');
 var plumber = require('gulp-plumber');
 var cache = require('gulp-cached');
 var concat = require('gulp-concat');
 var connect = require('gulp-connect');
 var sourcemaps = require('gulp-sourcemaps');
 var to5 = require("gulp-6to5");
+var browserify = require('gulp-browserify');
 var server = require('gulp-express');
-
+var react = require('gulp-react');
+var rename = require('gulp-rename');
 
 var paths = {
     front: {
         styles: 'front/styles/**/*.scss',
-        js: 'front/js/**/*.js'
+        js: 'front/js/**/*.js',
+        jsLibs: [
+            'bower_components/react/react.js'
+        ]
     },
     back: {
         js: 'back/*.js'
@@ -29,7 +33,7 @@ gulp.task('connect', function() {
 
 gulp.task('front-html', function() {
     gulp.src('front/index.html')
-        .pipe(gulp.dest('app/'));
+        .pipe(gulp.dest('dist/'));
 });
 
 gulp.task('front-scss', ['scss-lint'], function() {
@@ -45,16 +49,30 @@ gulp.task('scss-lint', function() {
         .pipe(scsslint({config: 'scsslint.yml'}));
 });
 
-gulp.task('front-traceur', function() {
+gulp.task('6to5', function() {
     return gulp.src(paths.front.js)
-        .pipe(plumber())
         .pipe(sourcemaps.init())
-        .pipe(traceur({
-            experimental: true
-        }))
-        .pipe(concat('main.js'))
+        .pipe(to5({modules: "common", experimental:true, runtime:false}))
         .pipe(sourcemaps.write())
+        .pipe(gulp.dest('tmp/js/'));
+});
+
+gulp.task('front-6to5', ['6to5'], function() {
+    return gulp.src('tmp/js/main.js')
+        .pipe(browserify({
+            insertGlobals: true,
+            debug: true,
+            entry: 'tmp/js/'
+        }))
+        .pipe(rename('main.js'))
         .pipe(gulp.dest('dist/js/'));
+});
+
+gulp.task('jslibs', function() {
+    gulp.src(paths.front.jsLibs)
+        .pipe(plumber())
+        .pipe(concat("libs.js"))
+        .pipe(gulp.dest("dist/js/"))
 });
 
 gulp.task('back-6to5', function () {
@@ -71,7 +89,7 @@ gulp.task('back-server', function () {
 
 gulp.task('watch', function () {
     // Front
-    gulp.watch(paths.front.js, ['front-traceur']);
+    gulp.watch(paths.front.js, ['front-6to5']);
     gulp.watch(paths.front.styles, ['front-scss']);
     gulp.watch('front/index.html', ['front-html']);
     // Back
@@ -80,7 +98,8 @@ gulp.task('watch', function () {
 
 gulp.task('default', ['front-scss',
                       'front-html',
-                      'front-traceur',
+                      'front-6to5',
+                      'jslibs',
                       'back-6to5',
                       'back-server',
                       'watch',

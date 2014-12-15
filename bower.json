@@ -1,0 +1,21 @@
+{
+  "name": "booCSS",
+  "version": "0.0.1",
+  "homepage": "https://github.com/PIWEEK/booCSS",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:PIWEEK/booCSS.git"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "lodash": "~2.4.1",
+    "react": "~0.12.1",
+    "es6-module-loader": "~0.10.0",
+    "system.js": "~0.10.2"
+  },
+  "private": true
+}
