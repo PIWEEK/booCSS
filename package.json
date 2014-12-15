@@ -2,8 +2,10 @@
   "name": "booCSS",
   "version": "0.0.1",
   "dependencies": {
-    "phantomcss": "^0.9.1",
-    "express": "^4.10.6"
+      "phantomjs": "1.9.7-14",
+      "casperjs": "~1.1.0-beta3",
+      "phantomcss":"^0.9.1 ",
+      "express": "^4.10.6"
   },
   "devDependencies": {
     "gulp": "^3.8.10",
