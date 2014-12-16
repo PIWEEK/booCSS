@@ -6,8 +6,6 @@ export var ListModeButton = React.createClass({
         this.props.onClick('list');
     },
     render: function() {
-        var cx = React.addons.classSet;
-
         var defaultButton = 'btn-default';
         var primaryButton = 'btn-primary';
         var buttonClasses = ['btn',
