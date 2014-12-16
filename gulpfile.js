@@ -17,7 +17,7 @@ var paths = {
         js: 'front/js/**/*.js'
     },
     back: {
-        js: 'back/**/*.js'
+        js: 'back/*.js'
     }
 };
 
@@ -65,7 +65,7 @@ gulp.task('back-6to5', function () {
 
 gulp.task('back-server', function () {
     return server.run({
-        file: 'dist/node/back/api/api.js'
+        file: 'dist/node/back/api.js'
     });
 });
 

@@ -1,4 +1,4 @@
-var phantomcss = require('./../phantomcss.js');
+var phantomcss = require('./phantomcss.js');
 
 phantomcss.init({
 	screenshotRoot: './screenshots',
@@ -6,12 +6,18 @@ phantomcss.init({
 	comparisonResultRoot: './results',
 	addLabelToFailedImage: false,
 	onFail: function(test){
-		console.log("- FAIL", test.filename, test.failFile, test.mismatch);
+		// We have a new screenshot but there is no change
+		console.log("- FAIL", test.filename);
+		console.log(" failing file:",  test.diffFile);
+		console.log(" diff file:", test.failFile);
+		console.log(test.mismatch);
 	},
 	onPass: function(test){
+		// We have screenshot but there is no change
 		console.log("- PASS", test.filename);
 	},
 	onNewImage: function(test){
+		// We still have no screenshot
 		console.log("NEW IMAGE", test.filename);
 	},
 	outputSettings: {
@@ -33,7 +39,7 @@ phantomcss.init({
 	},
 });
 
-casper.start( 'http://kaleidos.net/' );
+casper.start( 'http://kaleidos.net/asd' );
 casper.viewport(1024, 768);
 casper.then(function(){
 	phantomcss.screenshot('#content', 'main content');

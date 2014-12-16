@@ -59,7 +59,7 @@ function update(options){
 	_src = stripslash(options.screenshotRoot || _src);
 	_results = stripslash(options.comparisonResultRoot || _results || _src);
 	_failures = options.failedComparisonsRoot === false ? false : stripslash( options.failedComparisonsRoot || _failures);
-	
+
 	_fileNameGetter = options.fileNameGetter || _fileNameGetter;
 
 	_onPass = options.onPass || _onPass;
@@ -105,12 +105,12 @@ function getResemblePath(root){
 function turnOffAnimations(){
 	console.log('[PhantomCSS] Turning off animations');
 	casper.evaluate(function turnOffAnimations(){
-		
+
 		function disableAnimations(){
 			if(jQuery){
 				jQuery.fx.off = true;
 			}
-		
+
 			var css = document.createElement("style");
 			css.type = "text/css";
 			css.innerHTML = "* { -webkit-transition: none !important; transition: none !important; -webkit-animation: none !important; animation: none !important; }";
@@ -138,7 +138,7 @@ function _fileNameGetter(root, fileName){
 	}
 }
 
-	
+
 function screenshot(target, timeToWait, hideSelector, fileName){
 	var name;
 
@@ -346,6 +346,8 @@ function compareFiles(baseFile, file) {
 
 			asyncCompare(baseFile, file, function(isSame, mismatch){
 
+				console.log("asyncCompare", baseFile, file);
+
 				if(!isSame){
 
 					test.fail = true;
@@ -374,6 +376,7 @@ function compareFiles(baseFile, file) {
 								casper.captureSelector(failFile, 'img');
 
 								test.failFile = failFile;
+								test.diffFile = file;
 								console.log('Failure! Saved to', failFile);
 							}
 
@@ -382,7 +385,7 @@ function compareFiles(baseFile, file) {
 							} else {
 								casper.captureSelector(file.replace('.png', '.fail.png'), 'img');
 							}
-						
+
 							casper.evaluate(function(){
 								window._imagediff_.hasImage = false;
 							});
@@ -413,7 +416,7 @@ function compareAll(exclude, list){
 	var tests = [];
 
 	_test_exclude = typeof exclude === 'string' ? new RegExp(exclude) : exclude;
-	
+
 	if (list){
 		_diffsToProcess = list;
 	} else {
@@ -460,7 +463,7 @@ function initClient(){
 	casper.page.injectJs(_resemblePath);
 
 	casper.evaluate(function(mismatchTolerance, resembleOutputSettings){
-		
+
 		var result;
 
 		var div = document.createElement('div');
@@ -516,10 +519,10 @@ function initClient(){
 					if(Number(data.misMatchPercentage) > mismatchTolerance){
 						render(data);
 					}
-					
+
 				});
 		}
-	}, 
+	},
 		_mismatchTolerance,
 		_resembleOutputSettings
 	);
@@ -550,7 +553,7 @@ function _onComplete(tests, noOfFails, noOfErrors){
 		console.log("The next time you run these tests, new screenshots will be taken.  These screenshots will be compared to the original.");
 		console.log('If they are different, PhantomCSS will report a failure.');
 	} else {
-				
+
 		if(noOfFails === 0){
 			console.log("\nPhantomCSS found " + tests.length + " tests, None of them failed. Which is good right?");
 			console.log("\nIf you want to make them fail, change some CSS.");
