@@ -1,6 +1,6 @@
 require("6to5/polyfill");
 
-const DB_PATH = __dirname + "/db/booCSS.db"
+const DB_PATH = __dirname + "/../../../db/booCSS.db"
 
 var NeDB = require('nedb');
 
