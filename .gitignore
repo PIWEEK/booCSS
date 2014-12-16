@@ -1,4 +1,6 @@
 *.swo
-dist/*
-node_modules/*
+*.swp
+dist/
+db/
+node_modules/
 .sass-cache/
