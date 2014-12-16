@@ -1,20 +1,28 @@
 require("6to5/polyfill");
 
+var express = require("express");
+var livereload = require('connect-livereload');
+var bodyParser = require("body-parser");
+var app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json())
+app.use(livereload());
+
 var serveIndex = require('serve-index');
 var Convert = require('ansi-to-html');
 var convert = new Convert();
 convert.opts.newline = true;
 
-var express = require("express");
-var bodyParser = require("body-parser");
-var app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json())
-
 var buffspawn = require("buffered-spawn");
+
+var fs = require("fs");
 
 import {db as db} from "./db"
 
+
+// Constants
+const TESTS_PATH = __dirname + "/../../../tests";
+const BASE_TEST_FILE = __dirname + "/../../../tests/base.js";
 
 // Serving static content
 app.use('/results', serveIndex(__dirname + '/../../../results'));
@@ -23,6 +31,7 @@ app.use('/screenshots', serveIndex(__dirname + '/../../../screenshots'));
 app.use('/screenshots', express.static(__dirname + '/../../../screenshots'));
 app.use('/failures', serveIndex(__dirname + '/../../../failures'));
 app.use('/failures', express.static(__dirname + '/../../../failures'));
+
 
 /*********************************
  * API: /
@@ -38,16 +47,24 @@ app.get("/", (req, res) => {
 
 // list
 app.get("/api/tests", (req, res) => {
-    var tests = db.tests.find({}, (err, docs) => {
+    db.tests.find({}, (err, docs) => {
+        console.log("LIST: ", docs);
         res.send(docs);
     });
 });
 
 // create
 app.post("/api/tests", (req, res) => {
+    console.log(req.body);
     db.tests.insert(req.body, (err, doc) => {
-        //TODO: error control
-        res.send(doc);
+        //TODO: error control (db and file creation)
+        var outputFile = `${TESTS_PATH}/test_${doc._id}.js`;
+        fs.createReadStream(BASE_TEST_FILE).pipe(fs.createWriteStream(outputFile));
+
+        db.tests.update({_id: doc._id}, {$set: {file: outputFile}}, {multi: false}, (err, numReplaced) => {
+            console.log("CREATE: ", doc);
+            res.send(doc);
+        });
     });
 });
 
@@ -55,6 +72,7 @@ app.post("/api/tests", (req, res) => {
 app.get("/api/tests/:id", (req, res) => {
     db.tests.findOne({_id: req.param("id")}, (err, doc) => {
         //TODO: error control, actually response is empty if id is not valid
+        console.log("VIEW: ", doc);
         res.send(doc);
     });
 });
@@ -93,10 +111,10 @@ app.delete("/api/tests/:id", (req, res) => {
      });
 });
 
+
 /*********************************
  * Run Server
  *********************************/
-app.use(require('connect-livereload')());
 var server = app.listen(3000, function() {
     var host = server.address().address;
     var port = server.address().port;
