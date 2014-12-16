@@ -14,10 +14,17 @@ var rename = require('gulp-rename');
 
 var paths = {
     front: {
-        styles: 'front/styles/**/*.scss',
+        styles: 'front/styles/main.scss',
         js: 'front/js/**/*.js',
         jsLibs: [
-            'bower_components/react/react.js'
+            'bower_components/bootstrap-material-design/dist/js/ripples.js',
+            'bower_components/bootstrap-material-design/dist/js/material.js',
+            'bower_components/react/react.js',
+            'bower_components/react-router/dist/react-router.js'
+        ],
+        cssLibs: [
+            'bower_components/bootstrap-material-design/dist/css/ripples.min.css',
+            'bower_components/bootstrap-material-design/dist/css/material-wfont.css'
         ]
     },
     back: {
@@ -34,6 +41,13 @@ gulp.task('connect', function() {
 gulp.task('front-html', function() {
     gulp.src('front/index.html')
         .pipe(gulp.dest('dist/'));
+});
+
+gulp.task('front-material-design', function() {
+    gulp.src([
+        'bower_components/bootstrap-material-design/dist/fonts/*'
+    ])
+        .pipe(gulp.dest('dist/fonts'));
 });
 
 gulp.task('front-scss', ['scss-lint'], function() {
@@ -59,6 +73,7 @@ gulp.task('6to5', function() {
 
 gulp.task('front-6to5', ['6to5'], function() {
     return gulp.src('tmp/js/main.js')
+        .pipe(plumber())
         .pipe(browserify({
             insertGlobals: true,
             debug: true,
@@ -73,6 +88,13 @@ gulp.task('jslibs', function() {
         .pipe(plumber())
         .pipe(concat("libs.js"))
         .pipe(gulp.dest("dist/js/"))
+});
+
+gulp.task('csslibs', function() {
+    gulp.src(paths.front.cssLibs)
+        .pipe(plumber())
+        .pipe(concat("libs.css"))
+        .pipe(gulp.dest("dist/css/"))
 });
 
 gulp.task('back-6to5', function () {
@@ -96,10 +118,12 @@ gulp.task('watch', function () {
     gulp.watch(paths.back.js, ['back-6to5', 'back-server']);
 });
 
-gulp.task('default', ['front-scss',
+gulp.task('default', ['front-material-design',
+                      'front-scss',
                       'front-html',
                       'front-6to5',
                       'jslibs',
+                      'csslibs',
                       'back-6to5',
                       'back-server',
                       'watch',
