@@ -4,6 +4,7 @@
   "dependencies": {
     "6to5": "~1.15.0",
     "ansi-to-html": "~0.3.0",
+    "body-parser": "^1.10.0",
     "buffered-spawn": "~1.0.0",
     "casperjs": "~1.1.0-beta3",
     "connect-livereload": "^0.5.2",

@@ -6,7 +6,10 @@ var convert = new Convert();
 convert.opts.newline = true;
 
 var express = require("express");
+var bodyParser = require("body-parser");
 var app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json())
 
 var buffspawn = require("buffered-spawn");
 
@@ -43,7 +46,7 @@ app.get("/api/tests", (req, res) => {
 
 // create
 app.post("/api/tests", (req, res) => {
-    var test = db.insert(req.body, (err, doc) => {
+    var test = db.tests.insert(req.body, (err, doc) => {
         console.log("CREATE: ", doc);
         res.send(doc);
     });
