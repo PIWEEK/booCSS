@@ -2,21 +2,16 @@ require("6to5/polyfill");
 
 var serveIndex = require('serve-index');
 var Convert = require('ansi-to-html');
-var buffspawn = require('buffered-spawn');
-
 var express = require("express");
 var app = express();
 
-var convert = new Convert();
-convert.opts.newline = true;
-
-app.use('/results', serveIndex(__dirname + '/../../../../results'));
-app.use('/results', express.static(__dirname + '/../../../../results'));
-app.use('/screenshots', serveIndex(__dirname + '/../../../../screenshots'));
-app.use('/screenshots', express.static(__dirname + '/../../../../screenshots'));
-app.use('/failures', serveIndex(__dirname + '/../../../../failures'));
-app.use('/failures', express.static(__dirname + '/../../../../failures'));
-
+// Serving static content
+app.use('/results', serveIndex(__dirname + '/../../results'));
+app.use('/results', express.static(__dirname + '/../../results'));
+app.use('/screenshots', serveIndex(__dirname + '/../../screenshots'));
+app.use('/screenshots', express.static(__dirname + '/../../screenshots'));
+app.use('/failures', serveIndex(__dirname + '/../../failures'));
+app.use('/failures', express.static(__dirname + '/../../failures'));
 
 /*********************************
  * API: /
@@ -32,8 +27,7 @@ app.get("/", (req, res) => {
 
 app.get("/test", (req, res) => {
     console.log("launching");
-    buffspawn('casperjs', ['test', 'tests/testsuite.js'])
-    .progress((buff) => {
+    buffspawn('casperjs', ['test', 'tests/testsuite.js']).progress((buff) => {
         console.log("progress: ", buff.toString());
     })
     .spread((stdout, stderr) => {

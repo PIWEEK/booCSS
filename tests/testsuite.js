@@ -1,7 +1,3 @@
-/*
-	Require and initialise PhantomCSS module
-	Paths are relative to CasperJs directory
-*/
 var phantomcss = require('./../phantomcss.js');
 
 phantomcss.init({
