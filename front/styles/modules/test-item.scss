@@ -1,0 +1,30 @@
+.test-item {
+    align-items: center;
+    display: flex;
+    padding: 0 2rem;
+    .wrap {
+        align-items: center;
+        border-bottom: 1px solid #e6e6e6;
+        display: flex;
+        justify-content: space-between;
+        padding-left: 1.5rem;
+        width: 100%;
+    }
+    .status {
+        border-radius: 20px;
+        height: 40px;
+        width: 40px;
+        &.ok {
+            background-color: #4caf50;
+        }
+        &.fail {
+            background-color: #f44336;
+        }
+    }
+    .actions {
+        padding-right: 2rem;
+        .btn-success {
+            margin-right: 1rem;
+        }
+    }
+}

@@ -14,10 +14,9 @@
   "dependencies": {
     "lodash": "~2.4.1",
     "react": "~0.12.1",
-    "es6-module-loader": "~0.10.0",
-    "system.js": "~0.10.2",
     "bootstrap-material-design": "~0.2.1",
-    "react-router": "~0.11.5"
+    "react-router": "~0.11.5",
+    "flux": "~2.0.2"
   },
   "private": true
 }

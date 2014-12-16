@@ -14,12 +14,15 @@ var rename = require('gulp-rename');
 
 var paths = {
     front: {
-        styles: 'front/styles/main.scss',
+        mainScss: 'front/styles/main.scss',
+        styles: 'front/styles/**/*.scss',
         js: 'front/js/**/*.js',
         jsLibs: [
+            'bower_components/lodash/dist/lodash.js',
             'bower_components/bootstrap-material-design/dist/js/ripples.js',
             'bower_components/bootstrap-material-design/dist/js/material.js',
-            'bower_components/react/react.js',
+            'bower_components/react/react-with-addons.js',
+            'bower_components/flux/dist/Flux.js',
             'bower_components/react-router/dist/react-router.js'
         ],
         cssLibs: [
@@ -51,7 +54,7 @@ gulp.task('front-material-design', function() {
 });
 
 gulp.task('front-scss', ['scss-lint'], function() {
-    gulp.src(paths.front.styles)
+    gulp.src(paths.front.mainScss)
         .pipe(plumber())
         .pipe(scss())
         .pipe(gulp.dest('dist/styles/'));
@@ -65,6 +68,7 @@ gulp.task('scss-lint', function() {
 
 gulp.task('6to5', function() {
     return gulp.src(paths.front.js)
+        .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(to5({modules: "common", experimental:true, runtime:false}))
         .pipe(sourcemaps.write())
@@ -94,7 +98,7 @@ gulp.task('csslibs', function() {
     gulp.src(paths.front.cssLibs)
         .pipe(plumber())
         .pipe(concat("libs.css"))
-        .pipe(gulp.dest("dist/css/"))
+        .pipe(gulp.dest("dist/styles/"))
 });
 
 gulp.task('back-6to5', function () {
