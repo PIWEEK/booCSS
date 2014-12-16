@@ -7,7 +7,7 @@ phantomcss.init({
 	addLabelToFailedImage: false,
 	onFail: function(test){
 		// We have a new screenshot but there is no change
-		console.log("- FAIL", test.filename);
+		console.log("\nFAIL", test.filename);
 		console.log(" failing file:",  test.diffFile);
 		console.log(" diff file:", test.failFile);
 		console.log(test.mismatch);

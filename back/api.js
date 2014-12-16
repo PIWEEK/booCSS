@@ -39,53 +39,58 @@ app.get("/", (req, res) => {
 // list
 app.get("/api/tests", (req, res) => {
     var tests = db.tests.find({}, (err, docs) => {
-        console.log("LIST: ", docs);
         res.send(docs);
     });
 });
 
 // create
 app.post("/api/tests", (req, res) => {
-    var test = db.tests.insert(req.body, (err, doc) => {
-        console.log("CREATE: ", doc);
+    db.tests.insert(req.body, (err, doc) => {
+        //TODO: error control
         res.send(doc);
     });
 });
 
 // view
 app.get("/api/tests/:id", (req, res) => {
-    var test = db.tests.find({_id: req.param.id});
-    console.log("VIEW: ", test);
-    res.send(test);
+    db.tests.findOne({_id: req.param("id")}, (err, doc) => {
+        //TODO: error control, actually response is empty if id is not valid
+        res.send(doc);
+    });
 });
 
 // update
-//app.patch("/api/tests/:id", (req, res) => {
-//    var test = db.tests.find({_id: req.param.id});
-//    res.send(test);
-//});
-//
+app.patch("/api/tests/:id", (req, res) => {
+    //TODO: error control
+    db.tests.update({_id: req.param("id")}, { $set: req.body }, {}, function (err, numReplaced) {
+        db.tests.findOne({_id: req.param("id")}, (err, doc) => {
+            res.send(doc);
+        });
+    });
+});
 
 // delete
 app.delete("/api/tests/:id", (req, res) => {
-    var test = db.tests.remove({_id: req.param.id});
-    console.log("DELETE: ", test);
-    res.send(test);
+    //TODO: error control, actually response is empty if id is not valid
+    db.tests.remove({_id: req.param("id")}, (err, numDocRemoved) => {
+        res.send({});
+    });
 });
 
 // post - launch
- app.post('/api/tests/:testFile/launch', (req, res) => {
-    var testFile = req.param("testFile");
-    buffspawn('casperjs', ['test', testFile]).progress((buff) => {
-        console.log("Progress: ", buff.toString());
-    })
-    .spread((stdout, stderr) => {
-        // Both stdout and stderr are set with the buffered output, even on failure
-        res.send(convert.toHtml(stdout, stderr));
-    }, (err) => {
-        // Besides err.status there's also err.stdout & err.stderr
-        res.send(convert.toHtml(err.stdout, err.stderr));
-    });
+ app.post('/api/tests/:id/launch', (req, res) => {
+     db.tests.findOne({_id: req.param("id")}, (err, doc) => {
+         buffspawn('casperjs', ['test', doc.file]).progress((buff) => {
+             console.log("Progress: ", buff.toString());
+         })
+         .spread((stdout, stderr) => {
+             // Both stdout and stderr are set with the buffered output, even on failure
+             res.send(convert.toHtml(stdout, stderr));
+         }, (err) => {
+             // Besides err.status there's also err.stdout & err.stderr
+             res.send(convert.toHtml(err.stdout, err.stderr));
+         });
+     });
 });
 
 /*********************************

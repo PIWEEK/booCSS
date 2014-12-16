@@ -346,8 +346,6 @@ function compareFiles(baseFile, file) {
 
 			asyncCompare(baseFile, file, function(isSame, mismatch){
 
-				console.log("asyncCompare", baseFile, file);
-
 				if(!isSame){
 
 					test.fail = true;
