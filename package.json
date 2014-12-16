@@ -8,6 +8,7 @@
     "casperjs": "~1.1.0-beta3",
     "connect-livereload": "^0.5.2",
     "express": "~4.10.6",
+    "nedb": "^1.0.0",
     "phantomcss": "~0.9.1 ",
     "phantomjs": "~1.9.7-14",
     "resemblejs": "~1.2.0",

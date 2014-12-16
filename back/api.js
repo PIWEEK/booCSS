@@ -10,6 +10,9 @@ var app = express();
 
 var buffspawn = require("buffered-spawn");
 
+import {db as db} from "./db"
+
+
 // Serving static content
 app.use('/results', serveIndex(__dirname + '/../../../results'));
 app.use('/results', express.static(__dirname + '/../../../results'));
@@ -27,9 +30,47 @@ app.get("/", (req, res) => {
 
 
 /*********************************
- * API: /test
+ * API: /tests
  *********************************/
 
+// list
+app.get("/api/tests", (req, res) => {
+    var tests = db.tests.find({}, (err, docs) => {
+        console.log("LIST: ", docs);
+        res.send(docs);
+    });
+});
+
+// create
+app.post("/api/tests", (req, res) => {
+    var test = db.insert(req.body, (err, doc) => {
+        console.log("CREATE: ", doc);
+        res.send(doc);
+    });
+});
+
+// view
+app.get("/api/tests/:id", (req, res) => {
+    var test = db.tests.find({_id: req.param.id});
+    console.log("VIEW: ", test);
+    res.send(test);
+});
+
+// update
+//app.patch("/api/tests/:id", (req, res) => {
+//    var test = db.tests.find({_id: req.param.id});
+//    res.send(test);
+//});
+//
+
+// delete
+app.delete("/api/tests/:id", (req, res) => {
+    var test = db.tests.remove({_id: req.param.id});
+    console.log("DELETE: ", test);
+    res.send(test);
+});
+
+// post - launch
  app.post('/api/tests/:testFile/launch', (req, res) => {
     var testFile = req.param("testFile");
     buffspawn('casperjs', ['test', testFile]).progress((buff) => {
@@ -43,7 +84,6 @@ app.get("/", (req, res) => {
         res.send(convert.toHtml(err.stdout, err.stderr));
     });
 });
-
 
 /*********************************
  * Run Server
