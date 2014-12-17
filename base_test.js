@@ -1,4 +1,8 @@
 var phantomcss = require('./phantomcss.js');
+var fs = require('fs');
+var testId = casper.cli.options.testId;
+var _outputFile = '.'+fs.separator+'output'+fs.separator+testId;
+console.log("TEST ID:", testId);
 
 phantomcss.init({
 	screenshotRoot: './screenshots',
@@ -11,14 +15,31 @@ phantomcss.init({
 		console.log(" failing file:",  test.diffFile);
 		console.log(" diff file:", test.failFile);
 		console.log(test.mismatch);
+		output = {
+			'error': true,
+			'screenshot_ok': test.filename,
+			'screenshot_ko': test.diffFile,
+			'screenshot_diff': test.failFile
+		}
+		fs.write(_outputFile, JSON.stringify(output), 'w');
 	},
 	onPass: function(test){
 		// We have screenshot but there is no change
 		console.log("- PASS", test.filename);
+		output = {
+			'error': false,
+			'screenshot_ok': test.filename
+		}
+		fs.write(_outputFile, JSON.stringify(output), 'w');
 	},
 	onNewImage: function(test){
 		// We still have no screenshot
 		console.log("NEW IMAGE", test.filename);
+		output = {
+			'error': false,
+			'screenshot_ok': test.filename
+		}
+		fs.write(_outputFile, JSON.stringify(output), 'w');
 	},
 	outputSettings: {
 		errorColor: {
@@ -39,7 +60,7 @@ phantomcss.init({
 	},
 });
 
-casper.start( 'http://kaleidos.net/asd' );
+casper.start( 'http://kaleidos.net/asdasd' );
 casper.viewport(1024, 768);
 casper.then(function(){
 	phantomcss.screenshot('#content', 'main content');

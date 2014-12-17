@@ -14,6 +14,9 @@ var convert = new Convert();
 convert.opts.newline = true;
 
 var buffspawn = require("buffered-spawn");
+var chokidar = require('chokidar');
+var fs = require('fs');
+var path = require('path');
 
 var fs = require("fs");
 
@@ -80,7 +83,7 @@ app.get("/api/tests/:id", (req, res) => {
 // update
 app.patch("/api/tests/:id", (req, res) => {
     //TODO: error control
-    db.tests.update({_id: req.param("id")}, { $set: req.body }, {}, function (err, numReplaced) {
+    db.tests.update({_id: req.param("id")}, { $set: req.body }, {}, (err, numReplaced) => {
         db.tests.findOne({_id: req.param("id")}, (err, doc) => {
             res.send(doc);
         });
@@ -98,19 +101,43 @@ app.delete("/api/tests/:id", (req, res) => {
 // post - launch
  app.post('/api/tests/:id/launch', (req, res) => {
      db.tests.findOne({_id: req.param("id")}, (err, doc) => {
-         buffspawn('casperjs', ['test', doc.file]).progress((buff) => {
+         var lastExecutionDate = new Date()
+         buffspawn('casperjs', ['test', doc.file, '--testId='+doc._id])
+         .progress((buff) => {
              console.log("Progress: ", buff.toString());
          })
          .spread((stdout, stderr) => {
              // Both stdout and stderr are set with the buffered output, even on failure
-             res.send(convert.toHtml(stdout, stderr));
+             var output = convert.toHtml(stdout, stderr);
+             db.tests.update({_id: doc._id}, {$set: {output: output,  lastExecutionDate: lastExecutionDate}}, {}, (err, numReplaced) => {
+                 db.tests.findOne({_id: doc._id}, (err, updatedDoc) => {
+                     res.send(updatedDoc);
+                 });
+             });
          }, (err) => {
              // Besides err.status there's also err.stdout & err.stderr
-             res.send(convert.toHtml(err.stdout, err.stderr));
+             var output = convert.toHtml(err.stdout, err.stderr);
+             db.tests.update({_id: doc._id}, {$set: {output: output, lastExecutionDate: lastExecutionDate}}, {}, (err, numReplaced) => {
+                 db.tests.findOne({_id: doc._id}, (err, updatedDoc) => {
+                     res.send(updatedDoc);
+                 });
+             });
          });
      });
 });
 
+var watcher = chokidar.watch('output');
+watcher
+    .on('ready', function() {
+        console.info('Initial scan complete. Ready for changes.')
+        watcher.on('add', function(filePath) {
+            console.log('File', filePath, 'has been added');
+            var testResult = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+            var testId = filePath.split(path.sep)[1];
+            db.tests.update({_id: testId}, {$set: {'result': testResult}}, {});
+            fs.unlinkSync(filePath);
+        })
+})
 
 /*********************************
  * Run Server
