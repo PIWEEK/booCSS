@@ -1,6 +1,9 @@
 var Link = window.ReactRouter.Link;
 
 var TestHeader =  React.createClass({
+    componentDidMount: function() {
+        $.material.init();
+    },
     render: function () {
         var test = this.props.test;
 
@@ -12,7 +15,7 @@ var TestHeader =  React.createClass({
 
                 <div>
                     <button title="Launch" className="btn btn-fab btn-fab-mini btn-raised btn-material-deeporange"><i className="mdi-navigation-refresh"></i></button>
-                    <button title="Delete" className="btn btn-fab btn-fab-mini btn-raised btn-danger delete"><i className="mdi-action-delete"></i></button>
+                    <button title="Delete" data-toggle="modal" data-target="#delete-dialog" className="btn btn-fab btn-fab-mini btn-raised btn-danger delete"><i className="mdi-action-delete"></i></button>
                 </div>
             </div>
         );
@@ -81,6 +84,9 @@ var TestDetailSuccess = React.createClass({
 
 var TestDetail = React.createClass({
     mixins: [window.ReactRouter.State],
+    deleteTest: function() {
+        console.log('delete');
+    },
     render: function() {
         var routeParams = this.getParams();
         var testId = parseInt(routeParams.testId, 10);
@@ -109,6 +115,23 @@ var TestDetail = React.createClass({
         return (
             <div>
                 {detail}
+                <div id="delete-dialog" className="delete-dialog modal fade" tabindex="-1">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-body">
+                                <h2>Are you sure?</h2>
+                                <div className="options">
+                                    <button onClick={this.deleteTest} className="btn btn-primary btn-flat">
+                                        <i className="mdi-navigation-check"></i> Ok
+                                    </button>
+                                    <button data-dismiss="modal" className="btn btn-default btn-flat">
+                                        <i className="mdi-navigation-close"></i> Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
   }
