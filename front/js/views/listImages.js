@@ -1,6 +1,42 @@
 var Link = window.ReactRouter.Link;
 
+var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                              window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
+
+function isScrolledIntoView(elm) {
+    var docViewTop = $(window).scrollTop();
+    var docViewBottom = docViewTop + $(window).height();
+
+    var elmTop = $(elm).offset().top;
+
+    return elmTop <= docViewBottom;
+}
+
+function checkVisibles() {
+    $('.test-item-image img').each(function() {
+        if(isScrolledIntoView(this)) {
+            $(this).fadeIn();
+        } else {
+            $(this).hide();
+        }
+    });
+}
+
+
 export var ListImages = React.createClass({
+    componentDidMount: function() {
+        requestAnimationFrame(() => {
+            checkVisibles();
+        });
+
+        $(window).on('scroll', () => {
+            checkVisibles();
+        });
+    },
+    componentWillUnmount: function() {
+        $(window).off('scroll');
+    },
     render: function() {
         var tests = this.props.tests.map(function (test) {
             var status = test.status ? 'status ok' : 'status fail';

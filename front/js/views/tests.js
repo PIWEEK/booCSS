@@ -5,7 +5,7 @@ import {ListActions} from './listActions';
 
 var Link = window.ReactRouter.Link;
 
-var Tests = React.createClass({
+export var Tests = React.createClass({
     getInitialState: function() {
         var mode = localStorage.mode ? localStorage.mode : 'list';
 
@@ -43,5 +43,3 @@ var Tests = React.createClass({
         );
   }
 });
-
-export {Tests};

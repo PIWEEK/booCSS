@@ -1,4 +1,7 @@
 .test-image-list {
     display: flex;
     flex-wrap: wrap;
+    img {
+        display: none;
+    }
 }
