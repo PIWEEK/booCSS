@@ -19,10 +19,19 @@ var TestHeader =  React.createClass({
     }
 });
 
-
 var TestDetailFail = React.createClass({
     render: function() {
         var test = this.props.test;
+
+        var nextButton;
+
+        if (this.props.nextTest) {
+            nextButton = (
+                <Link to="test" params={{testId: this.props.nextTest.id}} className="btn btn-raised btn-warning">
+                    <i className="mdi-av-skip-next"></i>
+                </Link>
+            );
+        }
 
         return (
             <div className="test-detail test-detail-fail">
@@ -33,9 +42,7 @@ var TestDetailFail = React.createClass({
                             <button className="btn btn-raised btn-success">
                                 <i className="mdi-navigation-check"></i>
                             </button>
-                            <button className="btn btn-raised btn-warning">
-                                <i className="mdi-av-skip-next"></i>
-                            </button>
+                            {nextButton}
                         </div>
                     </div>
                     <div className="images">
@@ -84,7 +91,19 @@ var TestDetail = React.createClass({
         if (test.status) {
             detail = <TestDetailSuccess test={test} />
         } else {
-            detail = <TestDetailFail test={test} />
+            var failed = _.filter(this.props.tests, {status: false});
+            var testIndex = _.findIndex(failed, {id: testId});
+
+            var nextTestIndex = testIndex + 1;
+            var nextTest;
+
+            if (failed[nextTestIndex]) {
+                nextTest = failed[nextTestIndex];
+            } else if (testIndex !== 0) {
+                nextTest = failed[0];
+            }
+
+            detail = <TestDetailFail test={test} nextTest={nextTest} />
         }
 
         return (
