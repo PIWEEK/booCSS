@@ -19,6 +19,7 @@ var fs = require('fs');
 var path = require('path');
 
 var fs = require("fs");
+var replace = require("replace");
 
 import {db as db} from "./db"
 
@@ -62,7 +63,15 @@ app.post("/api/tests", (req, res) => {
     db.tests.insert(req.body, (err, doc) => {
         //TODO: error control (db and file creation)
         var outputFile = `${TESTS_PATH}/test_${doc._id}.js`;
-        fs.createReadStream(BASE_TEST_FILE).pipe(fs.createWriteStream(outputFile));
+        var writeStream = fs.createWriteStream(outputFile);
+        fs.createReadStream(BASE_TEST_FILE).pipe(writeStream);
+        writeStream.on('close', function(){
+            replace({
+                regex: 'TEST_URL',
+                replacement: doc.url,
+                paths: [outputFile]
+            });
+        })
 
         db.tests.update({_id: doc._id}, {$set: {file: outputFile}}, {multi: false}, (err, numReplaced) => {
             console.log("CREATE: ", doc);
@@ -123,21 +132,21 @@ app.delete("/api/tests/:id", (req, res) => {
                  });
              });
          });
+
+         var expectedOutputFilePath = 'output'+path.sep+doc._id;
+         var watcher = chokidar.watch('output', {ignoreInitial: true});
+         watcher.on('add', function(filePath) {
+             console.log('File', filePath, 'has been added');
+             if (expectedOutputFilePath == filePath) {
+                 watcher.close();
+                 var testResult = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+                 var testId = filePath.split(path.sep)[1];
+                 db.tests.update({_id: testId}, {$set: {'result': testResult}}, {});
+                 fs.unlinkSync(filePath);
+             }
+         })
      });
 });
-
-var watcher = chokidar.watch('output');
-watcher
-    .on('ready', function() {
-        console.info('Initial scan complete. Ready for changes.')
-        watcher.on('add', function(filePath) {
-            console.log('File', filePath, 'has been added');
-            var testResult = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-            var testId = filePath.split(path.sep)[1];
-            db.tests.update({_id: testId}, {$set: {'result': testResult}}, {});
-            fs.unlinkSync(filePath);
-        })
-})
 
 /*********************************
  * Run Server
