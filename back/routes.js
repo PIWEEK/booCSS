@@ -13,12 +13,14 @@ export function routesSetup(app, handlers){
     // static
     app.use('/tests', serveIndex(`${__dirname}/../../../tests`));
     app.use('/tests', express.static(`${__dirname}/../../../tests`));
-    app.use('/results', serveIndex(`${__dirname}/../../../results`));
-    app.use('/results', express.static(`${__dirname}/../../../results`));
-    app.use('/screenshots', serveIndex(`${__dirname}/../../../screenshots`));
-    app.use('/screenshots', express.static(`${__dirname}/../../../screenshots`));
-    app.use('/failures', serveIndex(`${__dirname}/../../../failures`));
-    app.use('/failures', express.static(`${__dirname}/../../../failures`));
+    //TODO: settings for screenshots folders
+    //TODO: create if not existing
+    app.use('/screenshots_ok', serveIndex(`${__dirname}/../../../screenshots_ok`));
+    app.use('/screenshots_ok', express.static(`${__dirname}/../../../screenshots_ok`));
+    app.use('/screenshots_pending', serveIndex(`${__dirname}/../../../screenshots_pending`));
+    app.use('/screenshots_pending', express.static(`${__dirname}/../../../screenshots_pending`));
+    app.use('/screenshots_diff', serveIndex(`${__dirname}/../../../screenshots_diff`));
+    app.use('/screenshots_diff', express.static(`${__dirname}/../../../screenshots_diff`));
 
     // /
     app.get("/", handlers.home);
