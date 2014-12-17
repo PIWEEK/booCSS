@@ -14,7 +14,7 @@ import db from './db'
 
 // Constants
 const TESTS_PATH = `${__dirname}/../../../tests`;
-const BASE_TEST_FILE = `__dirname}/../../../tests/base.js`;
+const BASE_TEST_FILE = `${__dirname}/../../../tests/base.js`;
 
 // Vars
 var convert = new Convert({newline: true});
@@ -32,19 +32,33 @@ var home = (req, res) => {
 /* HANDLER: Tests
 /************************************/
 var tests = {
+
     list: (req, res) => {
         db.tests.find({}, (err, docs) => {
             console.log('LIST: ', docs);
-            res.send(docs);
+            res.json(docs);
         });
     },
+
     create: (req, res) => {
+        req.checkBody("name", "required").notEmpty()
+        req.checkBody("description", "required").notEmpty()
+        req.checkBody("url", "required").notEmpty()
+        req.checkBody("url", "must be a valid url").isURL()
+
+        var errors = req.validationErrors(true);
+        if (errors) {
+            res.status(400).json(errors).end();
+        }
+
         db.tests.insert(req.body, (err, doc) => {
-            //TODO: error control (db and file creation)
+            if (err) {
+                res.status(400).json(err).end();
+            }
             var outputFile = `${TESTS_PATH}/test_${doc._id}.js`;
             var writeStream = fs.createWriteStream(outputFile);
             fs.createReadStream(BASE_TEST_FILE).pipe(writeStream);
-            writeStream.on('close', function(){
+            writeStream.on('close', () => {
                 replace({
                     regex: 'TEST_URL',
                     replacement: doc.url,
@@ -54,31 +68,48 @@ var tests = {
 
             db.tests.update({_id: doc._id}, {$set: {file: outputFile}}, {multi: false}, (err, numReplaced) => {
                 console.log('CREATE: ', doc);
-                res.send(doc);
+                res.json(doc);
             });
         });
     },
+
     view: (req, res) => {
         db.tests.findOne({_id: req.param('id')}, (err, doc) => {
-            //TODO: error control, actually response is empty if id is not valid
+            if(err){
+                res.status(404).json(err).end();
+            }
             console.log('VIEW: ', doc);
-            res.send(doc);
+            res.json(doc);
         });
     },
+
     update: (req, res) => {
-        //TODO: error control
+        req.checkBody("url", "must be a valid url").optional().isURL()
+
+        var errors = req.validationErrors(true);
+        if (errors) {
+            res.status(400).json(errors).end();
+        }
+
         db.tests.update({_id: req.param('id')}, { $set: req.body }, {}, (err, numReplaced) => {
+            if(err){
+                res.status(404).json(err).end();
+            }
             db.tests.findOne({_id: req.param('id')}, (err, doc) => {
-                res.send(doc);
+                res.json(doc);
             });
         });
     },
+
     delete: (req, res) => {
-        //TODO: error control, actually response is empty if id is not valid
         db.tests.remove({_id: req.param('id')}, (err, numDocRemoved) => {
-            res.send({});
+            if(err){
+                res.status(404).json(err).end();
+            }
+            res.json({});
         });
     },
+
     launch: (req, res) => {
         db.tests.findOne({_id: req.param("id")}, (err, doc) => {
             var lastExecutionDate = new Date();

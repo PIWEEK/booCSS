@@ -3,6 +3,7 @@ require("6to5/polyfill");
 
 // Imports
 import * as express from 'express';
+import * as validator from 'express-validator';
 import * as livereload from 'connect-livereload';
 import * as bodyParser from 'body-parser';
 
@@ -18,8 +19,9 @@ const PORT = 3000;
 /************************************/
 var app = express();
 app.use(livereload());
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json())
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(validator());
 
 routesSetup(app, handlers);
 
