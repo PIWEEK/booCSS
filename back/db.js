@@ -1,11 +1,16 @@
-require("6to5/polyfill");
-
-const DB_PATH = __dirname + "/../../../db/booCSS.db"
-
-var NeDB = require('nedb');
+require('6to5/polyfill');
 
 
-export var db = {
+// Imports
+import * as NeDB from 'nedb';
+
+// Constants
+const DB_PATH = `${__dirname}/../../../db/booCSS.db`;
+
+
+/************************************/
+/* DB resources
+/************************************/
+export default {
     tests: new NeDB({filename: DB_PATH, autoload: true})
 };
-

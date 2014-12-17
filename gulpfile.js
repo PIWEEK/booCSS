@@ -65,7 +65,7 @@ gulp.task('back-6to5', function () {
 
 gulp.task('back-server', function () {
     return server.run({
-        file: 'dist/node/back/api.js'
+        file: 'dist/node/back/server.js'
     });
 });
 
@@ -78,4 +78,10 @@ gulp.task('watch', function () {
     gulp.watch(paths.back.js, ['back-6to5', 'back-server']);
 });
 
-gulp.task('default', ['front-scss', 'front-html', 'front-traceur', 'back-6to5', 'back-server', 'watch', 'connect']);
+gulp.task('default', ['front-scss',
+                      'front-html',
+                      'front-traceur',
+                      'back-6to5',
+                      'back-server',
+                      'watch',
+                      'connect']);
