@@ -1,19 +1,43 @@
 var Link = window.ReactRouter.Link;
 
+var TestHeader =  React.createClass({
+    render: function () {
+        var test = this.props.test;
+
+        return (
+            <div className="test-header">
+                <Link to="main" title="Return" className="btn btn-fab btn-fab-mini btn-raised btn-primary go-back"><i className="mdi-navigation-arrow-back"></i></Link>
+
+                <h1>{test.name}</h1>
+
+                <div>
+                    <button title="Launch" className="btn btn-fab btn-fab-mini btn-raised btn-material-deeporange"><i className="mdi-navigation-refresh"></i></button>
+                    <button title="Delete" className="btn btn-fab btn-fab-mini btn-raised btn-danger delete"><i className="mdi-action-delete"></i></button>
+                </div>
+            </div>
+        );
+    }
+});
+
+
 var TestDetailFail = React.createClass({
     render: function() {
         var test = this.props.test;
+
         return (
             <div className="test-detail test-detail-fail">
                 <div className="inner">
+                    <TestHeader test={test} />
                     <div className="select-buttons">
                         <div className="wrap">
-                            <button className="btn btn-raised btn-success">Ok</button>
-                            <button className="btn btn-raised btn-warning">No</button>
+                            <button className="btn btn-raised btn-success">
+                                <i className="mdi-navigation-check"></i>
+                            </button>
+                            <button className="btn btn-raised btn-warning">
+                                <i className="mdi-av-skip-next"></i>
+                            </button>
                         </div>
                     </div>
-                    <Link to="main" title="Return" className="btn btn-fab btn-fab-mini btn-raised btn-primary go-back"><i className="mdi-navigation-arrow-back"></i></Link>
-                    <button title="Delete" className="btn btn-fab btn-fab-mini btn-raised btn-danger delete"><i className="mdi-action-delete"></i></button>
                     <div className="images">
                         <div className="original image">
                             <img src={test.original} />
@@ -38,8 +62,7 @@ var TestDetailSuccess = React.createClass({
         return (
             <div className="test-detail test-detail-success">
                 <div className="inner">
-                    <Link to="main" title="Return" className="btn btn-fab btn-fab-mini btn-raised btn-primary go-back"><i className="mdi-navigation-arrow-back"></i></Link>
-                    <button title="Delete" className="btn btn-fab btn-fab-mini btn-raised btn-danger delete"><i className="mdi-action-delete"></i></button>
+                    <TestHeader test={test} />
                     <div className="image">
                         <img src={test.original} />
                     </div>
@@ -66,7 +89,7 @@ var TestDetail = React.createClass({
 
         return (
             <div>
-            {detail}
+                {detail}
             </div>
         );
   }

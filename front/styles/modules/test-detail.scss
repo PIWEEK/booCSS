@@ -4,20 +4,23 @@
     .inner {
         position: relative;
     }
-    .delete {
-        position: absolute;
-        right: 0;
-        top: 0;
+    .test-header {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        h1 {
+            font-size: 25px;
+            margin: 0;
+        }
     }
-    .go-back {
-        left: 0;
-        position: absolute;
-        top: 0;
+    .delete {
+        margin-left: 1rem;
     }
 }
 
 .test-detail-fail {
     .select-buttons {
+        margin-top: 3rem;
         text-align: center;
         .btn {
             margin: 0 1rem 0 0;
