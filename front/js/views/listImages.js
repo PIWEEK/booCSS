@@ -34,6 +34,11 @@ export var ListImages = React.createClass({
             checkVisibles();
         });
     },
+    componentWillReceiveProps: function() {
+        requestAnimationFrame(() => {
+            checkVisibles();
+        });
+    },
     componentWillUnmount: function() {
         $(window).off('scroll');
     },

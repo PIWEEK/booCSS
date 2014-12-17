@@ -7,26 +7,48 @@ var Link = window.ReactRouter.Link;
 
 export var Tests = React.createClass({
     getInitialState: function() {
-        var mode = localStorage.mode ? localStorage.mode : 'list';
+        var defaultState = {
+            'mode': 'list',
+            'filter': false
+        };
 
-        localStorage.mode = mode;
+        var state = defaultState;
 
-        return {
-            'mode': mode
+        if (localStorage.state) {
+            state = JSON.parse(localStorage.state);
         }
+
+        localStorage.state = JSON.stringify(state);
+
+        return state;
     },
     setMode: function(mode) {
-        localStorage.mode = mode;
+        var state = {mode: mode, filter: this.state.filter};
 
-        this.setState({mode: mode});
+        localStorage.state = JSON.stringify(state);
+
+        this.setState(state);
+    },
+    toggleFilter: function() {
+        var state = {mode: this.state.mode, filter: !this.state.filter};
+
+        localStorage.state = JSON.stringify(state);
+
+        this.setState(state);
     },
     render: function() {
         var list;
 
+        var tests = this.props.tests;
+
+        if (this.state.filter) {
+            tests = _.filter(tests, {'status': false});
+        }
+
         if (this.state.mode === 'list') {
-            list = <List tests={this.props.tests} />
+            list = <List tests={tests} />
         } else {
-            list = <ListImages tests={this.props.tests} />
+            list = <ListImages tests={tests} />
         }
 
         return (
@@ -38,7 +60,7 @@ export var Tests = React.createClass({
                     </Link>
                 </div>
                {list}
-               <ListActions />
+               <ListActions toggleFilter={this.toggleFilter} filter={this.state.filter} />
             </div>
         );
   }

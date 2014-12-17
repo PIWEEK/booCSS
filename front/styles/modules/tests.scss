@@ -1,11 +1,14 @@
 .tests {
     padding: 1rem 2rem;
     .list-actions {
+        background: rgba(255, 255, 255, 0.5);
         bottom: 0;
         left: 0;
         position: fixed;
         text-align: center;
         width: 100%;
+        z-index: 100;
+
     }
     .top-tests-list {
         align-items: center;
