@@ -7,11 +7,17 @@ var Link = window.ReactRouter.Link;
 
 var Tests = React.createClass({
     getInitialState: function() {
+        var mode = localStorage.mode ? localStorage.mode : 'list';
+
+        localStorage.mode = mode;
+
         return {
-            mode: 'list'
+            'mode': mode
         }
     },
     setMode: function(mode) {
+        localStorage.mode = mode;
+
         this.setState({mode: mode});
     },
     render: function() {
