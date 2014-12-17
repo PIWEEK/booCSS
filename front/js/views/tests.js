@@ -2,7 +2,8 @@ import {ListModeButton} from './listModeButton';
 import {List} from './list';
 import {ListImages} from './listImages';
 import {ListActions} from './listActions';
-import {NewButton} from './newButton';
+
+var Link = window.ReactRouter.Link;
 
 var Tests = React.createClass({
     getInitialState: function() {
@@ -26,7 +27,9 @@ var Tests = React.createClass({
             <div className="tests">
                 <div className="top-tests-list">
                     <ListModeButton mode={this.state.mode} onClick={this.setMode} />
-                    <NewButton />
+                    <Link to="new" title="New" className="btn btn-fab btn-fab-mini btn-raised btn-primary">
+                        <i className="mdi-content-add"></i>
+                    </Link>
                 </div>
                {list}
                <ListActions />

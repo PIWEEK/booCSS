@@ -1,5 +1,6 @@
 import {Tests} from './views/tests';
 import {TestDetail} from './views/testDetail';
+import {NewForm} from './views/newForm';
 
 var Router = window.ReactRouter;
 var Route = Router.Route;
@@ -122,6 +123,7 @@ var App = React.createClass({
 var routes = (
   <Route handler={App} path="/">
     <Route name="test" path="/test/:testId" handler={TestDetail}/>
+    <Route name="new" path="/new" handler={NewForm}/>
     <Route name="main" path="/" handler={Tests}/>
   </Route>
 );
