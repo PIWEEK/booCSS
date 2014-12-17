@@ -1,0 +1,50 @@
+.test-detail {
+    padding: 2rem;
+    position: relative;
+    .inner {
+        position: relative;
+    }
+    .delete {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+    .go-back {
+        left: 0;
+        position: absolute;
+        top: 0;
+    }
+}
+
+.test-detail-fail {
+    .select-buttons {
+        text-align: center;
+        .btn {
+            margin: 0 1rem 0 0;
+        }
+    }
+    .images {
+        display: flex;
+        flex-wrap: wrap;
+        padding-top: 2rem;
+    }
+    .image {
+        text-align: center;
+    }
+    .original,
+    .new,
+    .diff {
+        padding: 2rem;
+        width: 50%;
+    }
+    .diff {
+        width: 100%;
+    }
+}
+
+.test-detail-success {
+    .image {
+        padding-top: 60px;
+        text-align: center;
+    }
+}
