@@ -1,0 +1,20 @@
+.tests {
+    padding: 1rem 2rem;
+    a {
+        color: #333;
+        text-decoration: none;
+    }
+    .list-actions {
+        bottom: 0;
+        left: 0;
+        position: fixed;
+        text-align: center;
+        width: 100%;
+    }
+    .top-tests-list {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 2rem;
+    }
+}

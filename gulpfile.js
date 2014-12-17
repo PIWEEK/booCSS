@@ -4,7 +4,6 @@ var scsslint = require('gulp-scss-lint');
 var plumber = require('gulp-plumber');
 var cache = require('gulp-cached');
 var concat = require('gulp-concat');
-var connect = require('gulp-connect');
 var sourcemaps = require('gulp-sourcemaps');
 var to5 = require("gulp-6to5");
 var browserify = require('gulp-browserify');
@@ -35,10 +34,19 @@ var paths = {
     }
 };
 
-gulp.task('connect', function() {
-    connect.server({
-        'root': 'dist'
+gulp.task('front-server', function() {
+    var express = require("express");
+    var app = express();
+
+    app.use("/js", express.static("dist/js"));
+    app.use("/styles", express.static("dist/styles"));
+    app.use("/fonts", express.static("dist/fonts"));
+
+    app.all ("/*", function(req, res, next) {
+        res.sendFile("index.html", {root: "dist/"})
     });
+
+    app.listen(9001);
 });
 
 gulp.task('front-html', function() {
@@ -131,4 +139,4 @@ gulp.task('default', ['front-material-design',
                       'back-6to5',
                       'back-server',
                       'watch',
-                      'connect']);
+                      'front-server']);

@@ -27,7 +27,7 @@ export var ListModeButton = React.createClass({
         classes.imageButtonClass = classes.imageButtonClass.join(' ');
 
         return (
-                <div className="list-actions">
+                <div className="list-mode">
                     <button className={classes.imageButtonClass} onClick={this.imagesMode}>Images</button>
                     <button className={classes.listButtonClass} onClick={this.listMode}>List</button>
                 </div>

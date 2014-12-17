@@ -3,6 +3,10 @@
     margin: 0 1rem;
     position: relative;
     width: 320px;
+    a {
+        color: #333;
+        text-decoration: none;
+    }
     .image-wrapper {
         height: 200px;
         overflow: hidden;

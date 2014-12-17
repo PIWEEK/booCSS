@@ -1,3 +1,5 @@
+var Link = window.ReactRouter.Link;
+
 export var List = React.createClass({
     render: function() {
         var tests = this.props.tests.map(function (test) {
@@ -14,7 +16,7 @@ export var List = React.createClass({
                     <div className={status}></div>
                     <div className="wrap">
                         <div className="content">
-                            <h2>{test.name}</h2>
+                            <h2><Link to="test" params={{testId: test.id}}>{test.name}</Link></h2>
                             <p className="date">{test.date}</p>
                         </div>
                         <div className="actions">
