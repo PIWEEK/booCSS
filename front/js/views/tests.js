@@ -2,6 +2,7 @@ import {ListModeButton} from './listModeButton';
 import {List} from './list';
 import {ListImages} from './listImages';
 import {ListActions} from './listActions';
+import api from '../api';
 
 var Link = window.ReactRouter.Link;
 
@@ -9,40 +10,46 @@ export var Tests = React.createClass({
     getInitialState: function() {
         var defaultState = {
             'mode': 'list',
-            'filter': false
+            'filter': false,
+            'tests': []
         };
 
         var state = defaultState;
 
-        if (localStorage.state) {
-            state = JSON.parse(localStorage.state);
-        }
+        if (localStorage.list) {
+            var listOptions = JSON.parse(localStorage.list);
 
-        localStorage.state = JSON.stringify(state);
+            state.filter = listOptions.filter ? listOptions.filter : state.filter;
+            state.mode = listOptions.mode ? listOptions.mode : state.mode;
+        }
 
         return state;
     },
-    // componentDidMount: function() {
-    //     console.log("did mount 2");
-    // },
+    componentDidMount: function() {
+        api.getTests().done((response) => {
+            if (this.isMounted()) {
+                this.setState({mode: this.state.mode, filter: this.state.filter, tests: response});
+            }
+        });
+    },
     setMode: function(mode) {
-        var state = {mode: mode, filter: this.state.filter};
+        var list = {mode: mode, filter: this.state.filter};
 
-        localStorage.state = JSON.stringify(state);
+        localStorage.list = JSON.stringify(list);
 
         this.setState(state);
     },
     toggleFilter: function() {
-        var state = {mode: this.state.mode, filter: !this.state.filter};
+        var list = {mode: this.state.mode, filter: !this.state.filter};
 
-        localStorage.state = JSON.stringify(state);
+        localStorage.list = JSON.stringify(list);
 
         this.setState(state);
     },
     render: function() {
         var list;
 
-        var tests = this.props.tests;
+        var tests = this.state.tests;
 
         if (this.state.filter) {
             tests = _.filter(tests, {'status': false});

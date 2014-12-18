@@ -1,3 +1,5 @@
+import api from '../api';
+
 var Link = window.ReactRouter.Link;
 
 var TestHeader =  React.createClass({
@@ -84,32 +86,46 @@ var TestDetailSuccess = React.createClass({
 
 var TestDetail = React.createClass({
     mixins: [window.ReactRouter.State],
+    getInitialState: function() {
+        return {
+            tests: []
+        }
+    },
     deleteTest: function() {
         console.log('delete');
+    },
+    componentDidMount: function() {
+        api.getTests().done((response) => {
+            if (this.isMounted()) {
+                this.setState({tests: response});
+            }
+        });
     },
     render: function() {
         var routeParams = this.getParams();
         var testId = routeParams.testId;
-        var test = _.find(this.props.tests, {_id: testId});
+        var test = _.find(this.state.tests, {_id: testId});
 
         var detail;
 
-        if (test.status) {
-            detail = <TestDetailSuccess test={test} />
-        } else {
-            var failed = _.filter(this.props.tests, {status: false});
-            var testIndex = _.findIndex(failed, {id: testId});
+        if (test) {
+            if (test.status) {
+                detail = <TestDetailSuccess test={test} />
+            } else {
+                var failed = _.filter(this.state.tests, {status: false});
+                var testIndex = _.findIndex(failed, {id: testId});
 
-            var nextTestIndex = testIndex + 1;
-            var nextTest;
+                var nextTestIndex = testIndex + 1;
+                var nextTest;
 
-            if (failed[nextTestIndex]) {
-                nextTest = failed[nextTestIndex];
-            } else if (testIndex !== 0) {
-                nextTest = failed[0];
+                if (failed[nextTestIndex]) {
+                    nextTest = failed[nextTestIndex];
+                } else if (testIndex !== 0) {
+                    nextTest = failed[0];
+                }
+
+                detail = <TestDetailFail test={test} nextTest={nextTest} />
             }
-
-            detail = <TestDetailFail test={test} nextTest={nextTest} />
         }
 
         return (

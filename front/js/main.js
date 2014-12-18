@@ -1,7 +1,6 @@
 import {Tests} from './views/tests';
 import {TestDetail} from './views/testDetail';
 import {NewForm} from './views/newForm';
-import api from './api';
 
 var Router = window.ReactRouter;
 var Route = Router.Route;
@@ -9,23 +8,9 @@ var RouteHandler = Router.RouteHandler;
 var DefaultRoute = Router.DefaultRoute;
 
 var App = React.createClass({
-    getInitialState: function() {
-        return {
-            tests: []
-        };
-    },
-    getTests: function() {
-        api.getTests().done((response) => {
-            this.setState({tests: response});
-        });
-    },
-    componentDidMount: function() {
-        console.log("did mount");
-        this.getTests();
-    },
     render: function () {
         return (
-            <RouteHandler tests={this.state.tests} />
+            <RouteHandler />
         );
     }
 });
