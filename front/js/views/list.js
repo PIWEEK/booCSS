@@ -16,7 +16,7 @@ export var List = React.createClass({
                     <div className={status}></div>
                     <div className="wrap">
                         <div className="content">
-                            <h2><Link to="test" params={{testId: test.id}}>{test.name}</Link></h2>
+                            <h2><Link to="test" params={{testId: test._id}}>{test.name}</Link></h2>
                             <p className="date">{test.date}</p>
                         </div>
                         <div className="actions">
