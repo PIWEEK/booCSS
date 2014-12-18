@@ -17,5 +17,9 @@ export default {
         console.log("DELETE", testId);
         var path = '/:id'.replace(':id', testId);
         return $.ajax({url: root + url + path, type: 'DELETE'});
+    },
+    resolveTest: function(testId, screenIndex) {
+        var path = '/:id/resolve'.replace(':id', testId);
+        return $.post(root + url + path, {'index': screenIndex});
     }
 };

@@ -25,7 +25,7 @@ var Item = React.createClass({
         var resolve = '';
 
         if (test.error) {
-            resolve = <button title="Resolve" className="btn btn-fab btn-fab-mini btn-raised btn-sm btn-success"><i className="mdi-navigation-check"></i></button>
+            resolve = <button title="Resolve" onClick={this.resolve.bind(null, test)} className="btn btn-fab btn-fab-mini btn-raised btn-sm btn-success"><i className="mdi-navigation-check"></i></button>
         }
 
         return (

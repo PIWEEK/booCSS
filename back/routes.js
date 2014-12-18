@@ -45,4 +45,6 @@ export function routesSetup(app, handlers){
     app.patch("/api/tests/:id", handlers.tests.update);
     app.delete("/api/tests/:id", handlers.tests.delete);
     app.post('/api/tests/:id/launch', handlers.tests.launch);
+    app.post('/api/tests/:id/resolve/', handlers.tests.resolve);
+    app.post('/api/tests/resolve', handlers.tests.resolveAll);
 }

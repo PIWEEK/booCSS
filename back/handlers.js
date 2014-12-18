@@ -111,13 +111,55 @@ var tests = {
                 res.json(doc);
             });
         });
-    }
+    },
+    resolve: (req, res) => {
+        req.checkBody("index", "required and must be a number").notEmpty().isInt();
+
+        var errors = req.validationErrors(true);
+        if (errors) {
+            res.status(400).json(errors).end();
+        }
+        db.tests.findOne({_id: req.param('id')}, (err, doc) => {
+            if(err){
+                res.status(404).json(err).end();
+            }
+            var index = req.body.index;
+            console.log('RESOLVE: ', doc.results[index]);
+
+            var diff_file = doc.results[index].screenshot_diff.split("/").slice(-1)[0];
+            var ok_file = doc.results[index].screenshot_ok.split("/").slice(-1)[0];
+            var ko_file = doc.results[index].screenshot_ko.split("/").slice(-1)[0];
+
+            var diff_path = `${SCREENSHOTS_DIFF_FOLDER_PATH}/${diff_file}`;
+            var ok_path = `${SCREENSHOTS_OK_FOLDER_PATH}/${ok_file}`;
+            var ko_path = `${SCREENSHOTS_PENDING_FOLDER_PATH}/${ko_file}`;
+
+            if(!fs.existsSync(ok_path)) {
+                res.status(500).json({}).end();
+            }
+            if(!fs.existsSync(ko_path)) {
+                res.status(500).json({}).end();
+            }
+            if(!fs.existsSync(diff_path)) {
+                res.status(500).json({}).end();
+            }
+
+            fs.remove(ok_path);
+            fs.remove(diff_path);
+            fs.copy(ko_path, ok_path);
+
+            doc.results[index].error = false;
+            doc.results[index].screenshot_diff = "";
+
+            db.tests.update({_id: doc._id}, {$set: doc}, {});
+            res.json(doc);
+        });
+    },
+    resolveAll: (req, res) => { }
 }
 
 
 /************************************/
 /* Exports
 /************************************/
-export default {
-    tests: tests
-};
+export default { tests: tests };
