@@ -115,10 +115,11 @@ class CasperOutputReader {
             }else{
                 //A new screenshot and an existing one, let's compare them!
                 var screenshotsDiffPath = this.screenshotsDiffFolder+path.sep+screenshotFileName;
-                var options = { file: screenshotsDiffPath, highlightColor: 'yellow', tolerance: 0.02 }
+                var options = { file: screenshotsDiffPath, highlightColor: 'yellow', tolerance: 0.00001 }
                 gm.compare(screenshotOkPath, screenshotCreatedPath, options, (err, isEqual, equality, raw, path1, path2) => {
                     //The new screenshot is different from the reference
                     var result = {}
+                    console.log("Comparing:", screenshotOkPath, screenshotCreatedPath, isEqual, equality)
                     if(!isEqual){
                         result = {
                             error: true,
