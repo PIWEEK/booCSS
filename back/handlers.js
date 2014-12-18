@@ -13,6 +13,38 @@ import {TESTS_PATH,
             SCREENSHOTS_PENDING_FOLDER_PATH,
             SCREENSHOTS_DIFF_FOLDER_PATH} from './settings';
 
+// Utils functions
+function resolveTest(doc, index, callback) {
+   var diff_file = doc.results[index].screenshot_diff.split("/").slice(-1)[0];
+   var ok_file = doc.results[index].screenshot_ok.split("/").slice(-1)[0];
+   var ko_file = doc.results[index].screenshot_ko.split("/").slice(-1)[0];
+
+   var diff_path = `${SCREENSHOTS_DIFF_FOLDER_PATH}/${diff_file}`;
+   var ok_path = `${SCREENSHOTS_OK_FOLDER_PATH}/${ok_file}`;
+   var ko_path = `${SCREENSHOTS_PENDING_FOLDER_PATH}/${ko_file}`;
+
+   if(!fs.existsSync(ok_path)) {
+       callback(true, doc);
+   }
+   if(!fs.existsSync(ko_path)) {
+       callback(true, doc);
+   }
+   if(!fs.existsSync(diff_path)) {
+       callback(true, doc);
+   }
+
+   fs.remove(ok_path);
+   fs.remove(diff_path);
+   fs.copy(ko_path, ok_path);
+
+   doc.results[index].error = false;
+   doc.results[index].screenshot_diff = "";
+
+   db.tests.update({_id: doc._id}, {$set: doc}, {});
+
+   callback(false, doc);
+}
+
 
 /************************************/
 /* HANDLER: Tests
@@ -126,36 +158,28 @@ var tests = {
             var index = req.body.index;
             console.log('RESOLVE: ', doc.results[index]);
 
-            var diff_file = doc.results[index].screenshot_diff.split("/").slice(-1)[0];
-            var ok_file = doc.results[index].screenshot_ok.split("/").slice(-1)[0];
-            var ko_file = doc.results[index].screenshot_ko.split("/").slice(-1)[0];
-
-            var diff_path = `${SCREENSHOTS_DIFF_FOLDER_PATH}/${diff_file}`;
-            var ok_path = `${SCREENSHOTS_OK_FOLDER_PATH}/${ok_file}`;
-            var ko_path = `${SCREENSHOTS_PENDING_FOLDER_PATH}/${ko_file}`;
-
-            if(!fs.existsSync(ok_path)) {
-                res.status(500).json({}).end();
-            }
-            if(!fs.existsSync(ko_path)) {
-                res.status(500).json({}).end();
-            }
-            if(!fs.existsSync(diff_path)) {
-                res.status(500).json({}).end();
-            }
-
-            fs.remove(ok_path);
-            fs.remove(diff_path);
-            fs.copy(ko_path, ok_path);
-
-            doc.results[index].error = false;
-            doc.results[index].screenshot_diff = "";
-
-            db.tests.update({_id: doc._id}, {$set: doc}, {});
-            res.json(doc);
+            resolveTest(doc, index, (err, doc) => {
+                if(err){
+                    res.status(500).json({error: `error resolving test ${doc._id}-${index}`}).end();
+                }
+                res.json(doc);
+            });
         });
     },
-    resolveAll: (req, res) => { }
+    resolveAll: (req, res) => {
+        db.tests.find({}, (err, docs) => {
+            for(doc of docs) {
+                for(var i = 0; i < doc.results.length; i++) {
+                    resolveTest(doc, i, (err, doc) => {
+                        if(err){
+                            res.status(500).json({error: `error resolving test ${doc._id}-${i}`}).end();
+                        }
+                    });
+                }
+            }
+            res.json({});
+        });
+    }
 }
 
 
