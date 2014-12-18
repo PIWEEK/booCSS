@@ -11,6 +11,24 @@ export default function(response) {
 
             newItem._id = newItem._id + '-' + index;
 
+            newItem.getScreenshotOk = function() {
+                let date = new Date().getTime();
+
+                return newItem.screenshot_ok + '?timestamp=' + date;
+            };
+
+            newItem.getScreenshotKo = function() {
+                let date = new Date().getTime();
+
+                return newItem.screenshot_ko + '?timestamp=' + date;
+            };
+
+            newItem.getScreenshotDiff = function() {
+                let date = new Date().getTime();
+
+                return newItem.screenshot_diff + '?timestamp=' + date;
+            };
+
             _.assign(newItem, result);
         });
 

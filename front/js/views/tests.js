@@ -26,12 +26,15 @@ export var Tests = React.createClass({
 
         return state;
     },
-    componentDidMount: function() {
+    loadTests: function() {
         api.getTests().done((response) => {
             if (this.isMounted()) {
                 this.setState({mode: this.state.mode, filter: this.state.filter, tests: transformResponse(response)});
             }
         });
+    },
+    componentDidMount: function() {
+        this.loadTests();
     },
     setMode: function(mode) {
         var list = {mode: mode, filter: this.state.filter};
@@ -45,7 +48,6 @@ export var Tests = React.createClass({
     checkAll: function() {
         var tests = _.filter(tests, {'error': true});
 
-
     },
     toggleFilter: function() {
         var list = {mode: this.state.mode, filter: !this.state.filter};
@@ -55,6 +57,9 @@ export var Tests = React.createClass({
         var state = {mode: list.mode, filter: list.filter, tests: this.state.tests};
 
         this.setState(state);
+    },
+    onChange: function() {
+        this.loadTests();
     },
     render: function() {
         var list;
@@ -66,9 +71,9 @@ export var Tests = React.createClass({
         }
 
         if (this.state.mode === 'list') {
-            list = <List tests={tests} />
+            list = <List tests={tests} onChange={this.onChange} />
         } else {
-            list = <ListImages tests={tests} />
+            list = <ListImages tests={tests} onChange={this.onChange} />
         }
 
         return (

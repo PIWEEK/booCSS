@@ -6,9 +6,23 @@ var Link = window.ReactRouter.Link;
 
 var TestHeader =  React.createClass({
     mixins: [TestActions],
+    loaderIconClass: 'mdi-navigation-refresh',
+    getInitialState: function() {
+        return {className: this.loaderIconClass}
+    },
     componentDidMount: function() {
         $.material.init();
     },
+    componentWillReceiveProps: function() {
+        this.setState({className: this.loaderIconClass});
+    },
+    handleLaunch: _.debounce(function(test) {
+        this.setState({className: this.loaderIconClass + ' glyphicon-refresh-animate'});
+
+        this.launch(test).done(() => {
+            this.props.onChange();
+        });
+    }, 2000, {leading: true, trailing: false}),
     render: function () {
         var test = this.props.test;
 
@@ -19,7 +33,7 @@ var TestHeader =  React.createClass({
                 <h1>{test.name}</h1>
 
                 <div>
-                    <button title="Launch" onClick={this.launch.bind(null, test)} className="btn btn-fab btn-fab-mini btn-raised btn-material-deeporange"><i className="mdi-navigation-refresh"></i></button>
+                    <button title="Launch" onClick={this.handleLaunch.bind(null, test)} className="btn btn-fab btn-fab-mini btn-raised btn-material-deeporange"><i className={this.state.className}></i></button>
                     <button title="Delete" data-toggle="modal" data-target="#delete-dialog" className="btn btn-fab btn-fab-mini btn-raised btn-danger delete"><i className="mdi-action-delete"></i></button>
                 </div>
             </div>
@@ -43,7 +57,7 @@ var TestDetailFail = React.createClass({
         return (
             <div className="test-detail test-detail-fail">
                 <div className="inner">
-                    <TestHeader test={test} />
+                    <TestHeader onChange={this.props.onChange} test={test} />
                     <div className="select-buttons">
                         <div className="wrap">
                             <button className="btn btn-raised btn-success">
@@ -54,13 +68,13 @@ var TestDetailFail = React.createClass({
                     </div>
                     <div className="images">
                         <div className="original image">
-                            <img src={test.screenshot_ok} />
+                            <img src={test.getScreenshotOk()} />
                         </div>
                         <div className="new image">
-                            <img src={test.screenshot_ko} />
+                            <img src={test.getScreenshotKo()} />
                         </div>
                         <div className="diff image">
-                            <img src={test.screenshot_diff} />
+                            <img src={test.getScreenshotDiff()} />
                         </div>
                     </div>
                 </div>
@@ -76,9 +90,9 @@ var TestDetailSuccess = React.createClass({
         return (
             <div className="test-detail test-detail-success">
                 <div className="inner">
-                    <TestHeader test={test} />
+                    <TestHeader onChange={this.props.onChange} test={test} />
                     <div className="image">
-                        <img src={test.screenshot_ok} />
+                        <img src={test.getScreenshotOk()} />
                     </div>
                 </div>
             </div>
@@ -99,12 +113,18 @@ var TestDetail = React.createClass({
             this.transitionTo('main');
         });
     },
-    componentDidMount: function() {
+    loadTests: function() {
         api.getTests().done((response) => {
             if (this.isMounted()) {
                 this.setState({tests: transformResponse(response)});
             }
         });
+    },
+    componentDidMount: function() {
+        this.loadTests();
+    },
+    onChange: function() {
+        this.loadTests();
     },
     render: function() {
         var routeParams = this.getParams();
@@ -114,7 +134,7 @@ var TestDetail = React.createClass({
 
         if (test) {
             if (!test.error) {
-                detail = <TestDetailSuccess test={test} />
+                detail = <TestDetailSuccess test={test} onChange={this.onChange} />
             } else {
                 var failed = _.filter(this.state.tests, {error: true});
                 var testIndex = _.findIndex(failed, {_id: testId});
@@ -128,7 +148,7 @@ var TestDetail = React.createClass({
                     nextTest = failed[0];
                 }
 
-                detail = <TestDetailFail test={test} nextTest={nextTest} />
+                detail = <TestDetailFail test={test} onChange={this.onChange} nextTest={nextTest} />
             }
         }
 
