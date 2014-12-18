@@ -2,11 +2,9 @@ import {TestActions} from '../common';
 
 export var ListActions = React.createClass({
     mixins: [TestActions],
-    resolveAllClass: 'mdi-navigation-check',
+    resolveAllClass: '',
     getInitialState: function() {
-        return {
-            resolveAllClass: this.resolveAllClass
-        }
+        return {resolveAllClass: this.resolveAllClass}
     },
     handleResolveAll: _.debounce(function() {
         this.state.resolveAllClass = 'mdi-navigation-refresh glyphicon-refresh-animate';
@@ -16,6 +14,9 @@ export var ListActions = React.createClass({
             this.props.onChange();
         });
     }, 2000, {leading: true, trailing: false}),
+    componentWillReceiveProps: function() {
+        this.setState({resolveAllClass: this.resolveAllClass});
+    },
     render: function() {
         var button;
 
@@ -28,7 +29,9 @@ export var ListActions = React.createClass({
         return (
             <div className="list-actions">
                 <div className="wrapper">
-                    <button onClick={this.handleResolveAll.bind(null)} className="btn btn-material-teal btn-raised">Check All</button>
+                    <button onClick={this.handleResolveAll.bind(null)} className="btn btn-material-teal btn-raised btn-resolve-all">
+                        <span className={this.state.resolveAllClass}></span> Check All
+                    </button>
                     {button}
                 </div>
             </div>

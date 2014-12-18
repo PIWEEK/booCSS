@@ -85,7 +85,7 @@ export var Tests = React.createClass({
                     </Link>
                 </div>
                {list}
-               <ListActions toggleFilter={this.toggleFilter} filter={this.state.filter} />
+               <ListActions onChange={this.onChange} toggleFilter={this.toggleFilter} filter={this.state.filter} />
             </div>
         );
   }
