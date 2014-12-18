@@ -37,12 +37,15 @@
     .original,
     .new,
     .diff {
-        overflow: scroll;
         padding: 2rem;
         width: 50%;
     }
     .diff {
+        text-align: center;
         width: 100%;
+        img {
+            width: 60%;
+        }
     }
     img {
         width: 100%;
