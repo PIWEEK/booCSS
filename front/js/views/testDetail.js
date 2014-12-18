@@ -87,14 +87,17 @@ var TestDetailSuccess = React.createClass({
 });
 
 var TestDetail = React.createClass({
-    mixins: [window.ReactRouter.State],
+    mixins: [window.ReactRouter.State, window.ReactRouter.Navigation],
     getInitialState: function() {
         return {
             tests: []
         }
     },
-    deleteTest: function() {
-        console.log('delete');
+    deleteTest: function(test) {
+        console.log("deleteTest", test);
+        api.deleteTest(test.testId).then(() => {
+            this.transitionTo('main');
+        });
     },
     componentDidMount: function() {
         api.getTests().done((response) => {
@@ -140,7 +143,7 @@ var TestDetail = React.createClass({
                             <div className="modal-body">
                                 <h2>Are you sure?</h2>
                                 <div className="options">
-                                    <button onClick={this.deleteTest} className="btn btn-primary btn-flat">
+                                    <button onClick={this.deleteTest.bind(null, test)} className="btn btn-primary btn-flat">
                                         <i className="mdi-navigation-check"></i> Ok
                                     </button>
                                     <button data-dismiss="modal" className="btn btn-default btn-flat">

@@ -11,7 +11,11 @@ export default {
     },
     launchTest: function(testId, screenIndex) {
         var path = '/:id/launch'.replace(':id', testId);
-
         return $.post(root + url + path, {'index': screenIndex});
+    },
+    deleteTest: function(testId) {
+        console.log("DELETE", testId);
+        var path = '/:id'.replace(':id', testId);
+        return $.ajax({url: root + url + path, type: 'DELETE'});
     }
 };
