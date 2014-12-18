@@ -38,7 +38,6 @@ var TestDetailFail = React.createClass({
                 </Link>
             );
         }
-
         return (
             <div className="test-detail test-detail-fail">
                 <div className="inner">
@@ -53,13 +52,13 @@ var TestDetailFail = React.createClass({
                     </div>
                     <div className="images">
                         <div className="original image">
-                            <img src={test.screenshots_ok} />
+                            <img src={test.screenshot_ok} />
                         </div>
                         <div className="new image">
-                            <img src={test.screenshots_pending} />
+                            <img src={test.screenshot_ko} />
                         </div>
                         <div className="diff image">
-                            <img src={test.screenshots_diff} />
+                            <img src={test.screenshot_diff} />
                         </div>
                     </div>
                 </div>
@@ -77,7 +76,7 @@ var TestDetailSuccess = React.createClass({
                 <div className="inner">
                     <TestHeader test={test} />
                     <div className="image">
-                        <img src={test.screenshots_ok} />
+                        <img src={test.screenshot_ok} />
                     </div>
                 </div>
             </div>

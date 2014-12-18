@@ -37,6 +37,7 @@
     .original,
     .new,
     .diff {
+        overflow: scroll;
         padding: 2rem;
         width: 50%;
     }
