@@ -6,7 +6,7 @@ export default function(response) {
 
         delete newItem.results;
         _.forEach(item.results, (result, index) => {
-            newItem.id = newItem.id + '-' + index;
+            newItem._id = newItem._id + '-' + index;
 
             _.assign(newItem, result);
         });
