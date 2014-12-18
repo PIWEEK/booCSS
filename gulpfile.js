@@ -42,6 +42,7 @@ gulp.task('front-server', function() {
     app.use("/js", express.static("dist/js"));
     app.use("/styles", express.static("dist/styles"));
     app.use("/fonts", express.static("dist/fonts"));
+    app.use("/images", express.static("dist/app-images"));
 
     app.all ("/*", function(req, res, next) {
         res.sendFile("index.html", {root: "dist/"})
@@ -56,6 +57,11 @@ gulp.task('front-server', function() {
 gulp.task('front-html', function() {
     gulp.src('front/index.html')
         .pipe(gulp.dest('dist/'));
+});
+
+gulp.task('front-images', function() {
+    gulp.src('front/images/*')
+        .pipe(gulp.dest('dist/app-images/'));
 });
 
 gulp.task('front-material-design', function() {
@@ -143,6 +149,7 @@ gulp.task('watch', function () {
 gulp.task('default', ['front-material-design',
                       'front-scss',
                       'front-html',
+                      'front-images',
                       'jslibs',
                       'csslibs',
                       'back-6to5',

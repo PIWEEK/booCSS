@@ -8,13 +8,17 @@ export default function(response) {
         _.forEach(item.results, (result, index) => {
             newItem.testId = newItem._id;
             newItem.index = index;
-
+            console.log(result.screenshot_ok);
             newItem._id = newItem._id + '-' + index;
 
             newItem.getScreenshotOk = function() {
-                let date = new Date().getTime();
+                if (newItem.screenshot_ok) {
+                    let date = new Date().getTime();
 
-                return newItem.screenshot_ok + '?timestamp=' + date;
+                    return newItem.screenshot_ok + '?timestamp=' + date;
+                } else {
+                    return '/images/no-image.png';
+                }
             };
 
             newItem.getScreenshotKo = function() {
