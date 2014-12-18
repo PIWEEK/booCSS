@@ -1,6 +1,9 @@
+import {TestActions} from '../common';
+
 var Link = window.ReactRouter.Link;
 
 export var List = React.createClass({
+    mixins: [TestActions],
     render: function() {
         var tests = this.props.tests.map(function (test) {
             var status = test.error ? 'status fail' : 'status ok btn-material-success';
@@ -21,7 +24,7 @@ export var List = React.createClass({
                         </div>
                         <div className="actions">
                             {resolve}
-                            <button title="Launch" className="btn btn-fab btn-fab-mini btn-raised btn-material-deeporange"><i className="mdi-navigation-refresh"></i></button>
+                            <button title="Launch" onClick={this.launch.bind(null, test)} className="btn btn-fab btn-fab-mini btn-raised btn-material-deeporange"><i className="mdi-navigation-refresh"></i></button>
                         </div>
                     </div>
                 </div>

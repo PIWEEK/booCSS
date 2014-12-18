@@ -42,6 +42,11 @@ export var Tests = React.createClass({
 
         this.setState(state);
     },
+    checkAll: function() {
+        var tests = _.filter(tests, {'error': true});
+
+
+    },
     toggleFilter: function() {
         var list = {mode: this.state.mode, filter: !this.state.filter};
 

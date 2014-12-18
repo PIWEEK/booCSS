@@ -1,3 +1,5 @@
+import {TestActions} from '../common';
+
 var Link = window.ReactRouter.Link;
 
 var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
@@ -23,8 +25,8 @@ function checkVisibles() {
     });
 }
 
-
 export var ListImages = React.createClass({
+    mixins: [TestActions],
     componentDidMount: function() {
         requestAnimationFrame(() => {
             checkVisibles();
@@ -53,7 +55,6 @@ export var ListImages = React.createClass({
             if (test.error) {
                 resolve = <button title="Resolve" className="btn btn-fab btn-fab-mini btn-raised btn-sm btn-success"><i className="mdi-navigation-check"></i></button>
             }
-
             return (
                 <div className="test-item-image">
                     <div className="image-wrapper">
@@ -61,7 +62,7 @@ export var ListImages = React.createClass({
                         <div className="actions">
                              <div>
                                  {resolve}
-                                 <button title="Launch" className="btn btn-fab btn-fab-mini btn-raised btn-material-deeporange"><i className="mdi-navigation-refresh"></i></button>
+                                 <button title="Launch" onClick={this.launch.bind(null, test)} className="btn btn-fab btn-fab-mini btn-raised btn-material-deeporange"><i className="mdi-navigation-refresh"></i></button>
                              </div>
                         </div>
                     </div>
@@ -74,7 +75,7 @@ export var ListImages = React.createClass({
                     </div>
                 </div>
             );
-        });
+        }, this);
 
         return (
             <div className="test-image-list">

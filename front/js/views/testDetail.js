@@ -1,9 +1,11 @@
 import api from '../api';
 import transformResponse from '../transformListResponse';
+import {TestActions} from '../common';
 
 var Link = window.ReactRouter.Link;
 
 var TestHeader =  React.createClass({
+    mixins: [TestActions],
     componentDidMount: function() {
         $.material.init();
     },
@@ -17,7 +19,7 @@ var TestHeader =  React.createClass({
                 <h1>{test.name}</h1>
 
                 <div>
-                    <button title="Launch" className="btn btn-fab btn-fab-mini btn-raised btn-material-deeporange"><i className="mdi-navigation-refresh"></i></button>
+                    <button title="Launch" onClick={this.launch.bind(null, test)} className="btn btn-fab btn-fab-mini btn-raised btn-material-deeporange"><i className="mdi-navigation-refresh"></i></button>
                     <button title="Delete" data-toggle="modal" data-target="#delete-dialog" className="btn btn-fab btn-fab-mini btn-raised btn-danger delete"><i className="mdi-action-delete"></i></button>
                 </div>
             </div>

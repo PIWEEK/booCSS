@@ -8,5 +8,10 @@ export default {
     },
     getTests: function() {
         return $.get(root + url);
+    },
+    launchTest: function(testId, screenIndex) {
+        var path = '/:id/launch'.replace(':id', testId);
+
+        return $.post(root + url + path, {'index': screenIndex});
     }
 };

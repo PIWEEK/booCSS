@@ -11,7 +11,7 @@ export var ListActions = React.createClass({
         return (
             <div className="list-actions">
                 <div className="wrapper">
-                    <button className="btn btn-material-teal btn-raised">Check All</button>
+                    <button onClick={this.props.checkAll} className="btn btn-material-teal btn-raised">Check All</button>
                     {button}
                 </div>
             </div>
