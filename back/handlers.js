@@ -15,6 +15,7 @@ import {TESTS_PATH,
 
 // Utils functions
 function resolveTest(doc, index, callback) {
+   console.log("--CACA-- ", doc._id, index, doc.results[index].error);
    var diff_file = doc.results[index].screenshot_diff.split("/").slice(-1)[0];
    var ok_file = doc.results[index].screenshot_ok.split("/").slice(-1)[0];
    var ko_file = doc.results[index].screenshot_ko.split("/").slice(-1)[0];
@@ -168,16 +169,18 @@ var tests = {
     },
     resolveAll: (req, res) => {
         db.tests.find({}, (err, docs) => {
-            for(doc of docs) {
+            for(var doc of docs) {
                 for(var i = 0; i < doc.results.length; i++) {
-                    resolveTest(doc, i, (err, doc) => {
-                        if(err){
-                            res.status(500).json({error: `error resolving test ${doc._id}-${i}`}).end();
-                        }
-                    });
+                    if (doc.results[i].error){
+                        resolveTest(doc, i, (err, doc) => {
+                            if(err){
+                                res.status(500).json({error: `error resolving test ${doc._id}-${i}`}).end();
+                            }
+                        });
+                    }
                 }
             }
-            res.json({});
+            res.status(200).end();
         });
     }
 }
