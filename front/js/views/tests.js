@@ -38,12 +38,16 @@ export var Tests = React.createClass({
 
         localStorage.list = JSON.stringify(list);
 
+        var state = {mode: list.mode, filter: list.filter, tests: this.state.tests};
+
         this.setState(state);
     },
     toggleFilter: function() {
         var list = {mode: this.state.mode, filter: !this.state.filter};
 
         localStorage.list = JSON.stringify(list);
+
+        var state = {mode: list.mode, filter: list.filter, tests: this.state.tests};
 
         this.setState(state);
     },
