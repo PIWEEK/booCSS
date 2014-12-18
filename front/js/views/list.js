@@ -29,7 +29,7 @@ export var List = React.createClass({
                     </div>
                 </div>
             );
-        });
+        }, this);
 
         return (
             <div className="test-list">
