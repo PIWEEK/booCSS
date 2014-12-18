@@ -10,6 +10,7 @@ var browserify = require('gulp-browserify');
 var server = require('gulp-express');
 var react = require('gulp-react');
 var rename = require('gulp-rename');
+var autoprefixer = require('gulp-autoprefixer');
 
 var paths = {
     front: {
@@ -67,7 +68,13 @@ gulp.task('front-material-design', function() {
 gulp.task('front-scss', ['scss-lint'], function() {
     gulp.src(paths.front.mainScss)
         .pipe(plumber())
-        .pipe(scss())
+        .pipe(scss({
+            'sourcemap=none': true
+        }))
+        .pipe(autoprefixer({
+            browsers: ['last 2 versions'],
+            cascade: false
+        }))
         .pipe(gulp.dest('dist/styles/'));
 });
 
