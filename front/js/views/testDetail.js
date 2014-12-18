@@ -35,7 +35,7 @@ var TestDetailFail = React.createClass({
 
         if (this.props.nextTest) {
             nextButton = (
-                <Link to="test" params={{testId: this.props.nextTest.id}} className="btn btn-raised btn-warning">
+                <Link to="test" params={{testId: this.props.nextTest._id}} className="btn btn-raised btn-warning">
                     <i className="mdi-av-skip-next"></i>
                 </Link>
             );
