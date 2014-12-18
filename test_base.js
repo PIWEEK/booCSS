@@ -9,7 +9,7 @@ casper.viewport(1024, 768);
 
 casper.then(function() {
 	capturePath = screenshotsFolder+fs.separator+ testId+'_1.png'
-	this.captureSelector(capturePath, 'body');
+	this.captureSelector(capturePath, 'html');
 	screenshots.push(capturePath);
 });
 
