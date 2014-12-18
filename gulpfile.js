@@ -46,7 +46,10 @@ gulp.task('front-server', function() {
         res.sendFile("index.html", {root: "dist/"})
     });
 
-    app.listen(9001);
+    var server = app.listen(9001);
+    var host = server.address().address;
+    var port = server.address().port;
+    console.log('Web app listening at http://'+host+':'+port);
 });
 
 gulp.task('front-html', function() {
