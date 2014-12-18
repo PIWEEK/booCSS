@@ -94,7 +94,6 @@ var TestDetail = React.createClass({
         }
     },
     deleteTest: function(test) {
-        console.log("deleteTest", test);
         api.deleteTest(test.testId).then(() => {
             this.transitionTo('main');
         });
