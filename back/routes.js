@@ -4,6 +4,10 @@ require("6to5/polyfill");
 // Imports
 import * as express from "express";
 import * as serveIndex from 'serve-index';
+import {TESTS_PATH,
+            SCREENSHOTS_OK_FOLDER_PATH,
+            SCREENSHOTS_PENDING_FOLDER_PATH,
+            SCREENSHOTS_DIFF_FOLDER_PATH} from './settings';
 
 
 /************************************/
@@ -11,19 +15,14 @@ import * as serveIndex from 'serve-index';
 /************************************/
 export function routesSetup(app, handlers){
     // static
-    app.use('/tests', serveIndex(`${__dirname}/../../../tests`));
-    app.use('/tests', express.static(`${__dirname}/../../../tests`));
-    //TODO: settings for screenshots folders
-    //TODO: create if not existing
-    app.use('/screenshots_ok', serveIndex(`${__dirname}/../../../screenshots_ok`));
-    app.use('/screenshots_ok', express.static(`${__dirname}/../../../screenshots_ok`));
-    app.use('/screenshots_pending', serveIndex(`${__dirname}/../../../screenshots_pending`));
-    app.use('/screenshots_pending', express.static(`${__dirname}/../../../screenshots_pending`));
-    app.use('/screenshots_diff', serveIndex(`${__dirname}/../../../screenshots_diff`));
-    app.use('/screenshots_diff', express.static(`${__dirname}/../../../screenshots_diff`));
-
-    // /
-    app.get("/", handlers.home);
+    app.use('/tests', serveIndex(TESTS_PATH));
+    app.use('/tests', express.static(TESTS_PATH));
+    app.use('/screenshots_ok', serveIndex(SCREENSHOTS_OK_FOLDER_PATH));
+    app.use('/screenshots_ok', express.static(SCREENSHOTS_OK_FOLDER_PATH));
+    app.use('/screenshots_pending', serveIndex(SCREENSHOTS_PENDING_FOLDER_PATH));
+    app.use('/screenshots_pending', express.static(SCREENSHOTS_PENDING_FOLDER_PATH));
+    app.use('/screenshots_diff', serveIndex(SCREENSHOTS_DIFF_FOLDER_PATH));
+    app.use('/screenshots_diff', express.static(SCREENSHOTS_DIFF_FOLDER_PATH));
 
     // /api/*
     app.all('/*', function(req, res, next) {

@@ -3,9 +3,7 @@ require('6to5/polyfill');
 
 // Imports
 import * as NeDB from 'nedb';
-
-// Constants
-const DB_PATH = `${__dirname}/../../../db/booCSS.db`;
+import {DB_PATH} from './settings';
 
 
 /************************************/

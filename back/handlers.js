@@ -6,17 +6,12 @@ import db from './db'
 import {TestLauncher} from './launcher'
 import * as fs from 'fs-extra';
 import * as replace from 'replace';
-
-// Constants
-const TESTS_PATH = `${__dirname}/../../../tests`;
-const BASE_TEST_FILE = `${__dirname}/../../../tests/base.js`;
-
-/************************************/
-/* HANDLER: Home
-/************************************/
-var home = (req, res) => {
-    res.send('Hello World!')
-}
+import {TESTS_PATH,
+            BASE_TEST_FILE,
+            CASPER_OUTPUT_FOLDER_PATH,
+            SCREENSHOTS_OK_FOLDER_PATH,
+            SCREENSHOTS_PENDING_FOLDER_PATH,
+            SCREENSHOTS_DIFF_FOLDER_PATH} from './settings';
 
 
 /************************************/
@@ -102,10 +97,7 @@ var tests = {
 
     launch: (req, res) => {
         db.tests.findOne({_id: req.param("id")}, (err, doc) => {
-            //TODO: configure screenshots_pending
-            //TODO: configure settings
-            //TODO: settings screenshot folders
-            var test =  new TestLauncher(doc._id, doc.file, 'output', 'screenshots_pending', 'screenshots_ok', 'screenshots_diff');
+            var test =  new TestLauncher(doc._id, doc.file, CASPER_OUTPUT_FOLDER_PATH, SCREENSHOTS_PENDING_FOLDER_PATH, SCREENSHOTS_OK_FOLDER_PATH, SCREENSHOTS_DIFF_FOLDER_PATH);
             test.launch().then((updatedData) => {
                 db.tests.update({_id: doc._id}, {$set: updatedData}, {});
                 doc.results = updatedData.results;
@@ -122,6 +114,5 @@ var tests = {
 /* Exports
 /************************************/
 export default {
-    home: home,
     tests: tests
 };
