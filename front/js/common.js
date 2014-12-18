@@ -9,6 +9,9 @@ var TestActions = {
     },
     resolve: (test) => {
         return api.resolveTest(test.testId, test.index);
+    },
+    resolveAll: (test) => {
+        return api.resolveAllTests();
     }
 }
 

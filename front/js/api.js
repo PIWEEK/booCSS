@@ -21,5 +21,9 @@ export default {
     resolveTest: function(testId, screenIndex) {
         var path = '/:id/resolve'.replace(':id', testId);
         return $.post(root + url + path, {'index': screenIndex});
+    },
+    resolveAllTests: function() {
+        var path = '/resolve';
+        return $.post(root + url + path, {});
     }
 };
