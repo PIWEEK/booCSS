@@ -53,7 +53,7 @@ export var Tests = React.createClass({
         var tests = this.state.tests;
 
         if (this.state.filter) {
-            tests = _.filter(tests, {'status': false});
+            tests = _.filter(tests, {'error': true});
         }
 
         if (this.state.mode === 'list') {

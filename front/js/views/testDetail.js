@@ -110,10 +110,10 @@ var TestDetail = React.createClass({
         var detail;
 
         if (test) {
-            if (test.status) {
+            if (test.error) {
                 detail = <TestDetailSuccess test={test} />
             } else {
-                var failed = _.filter(this.state.tests, {status: false});
+                var failed = _.filter(this.state.tests, {error: false});
                 var testIndex = _.findIndex(failed, {id: testId});
 
                 var nextTestIndex = testIndex + 1;

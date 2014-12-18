@@ -3,11 +3,11 @@ var Link = window.ReactRouter.Link;
 export var List = React.createClass({
     render: function() {
         var tests = this.props.tests.map(function (test) {
-            var status = test.status ? 'status ok btn-material-success' : 'status fail';
+            var status = test.error ? 'status fail' : 'status ok btn-material-success';
 
             var resolve = '';
 
-            if (!test.status) {
+            if (test.error) {
                 resolve = <button title="Resolve" className="btn btn-fab btn-fab-mini btn-raised btn-sm btn-success"><i className="mdi-navigation-check"></i></button>
             }
 
