@@ -95,6 +95,7 @@ var TestDetail = React.createClass({
     },
     deleteTest: function(test) {
         api.deleteTest(test.testId).then(() => {
+            $('#delete-dialog').modal('hide');
             this.transitionTo('main');
         });
     },
@@ -108,9 +109,7 @@ var TestDetail = React.createClass({
     render: function() {
         var routeParams = this.getParams();
         var testId = routeParams.testId;
-        console.log(testId);
         var test = _.find(this.state.tests, {_id: testId});
-        console.log(test);
         var detail;
 
         if (test) {
