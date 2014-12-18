@@ -15,7 +15,6 @@ import {TESTS_PATH,
 
 // Utils functions
 function resolveTest(doc, index, callback) {
-   console.log("--CACA-- ", doc._id, index, doc.results[index].error);
    var diff_file = doc.results[index].screenshot_diff.split("/").slice(-1)[0];
    var ok_file = doc.results[index].screenshot_ok.split("/").slice(-1)[0];
    var ko_file = doc.results[index].screenshot_ko.split("/").slice(-1)[0];
