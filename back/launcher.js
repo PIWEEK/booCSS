@@ -56,7 +56,7 @@ class CasperLauncher {
     }
 
     launch(){
-        console.log(`LAUNCHING: casperjs --verbose test ${this.testFilePath} --testId=${this.testId} --outputFile=${this.outputFilePath} --screenshotsFolder=${this.screenshotsPendingFolder}`);
+        console.log(`LAUNCHING: casperjs --verbose --engine=slimerjs  test ${this.testFilePath} --testId=${this.testId} --outputFile=${this.outputFilePath} --screenshotsFolder=${this.screenshotsPendingFolder}`);
         var promise = new Promise((resolve, reject) => {
             buffspawn('casperjs', ['--verbose', 'test', this.testFilePath, '--testId='+this.testId, '--outputFile='+this.outputFilePath, '--screenshotsFolder='+this.screenshotsPendingFolder])
             .progress((buff) => { console.log("Progress: ", buff.toString());})
