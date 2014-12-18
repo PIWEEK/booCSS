@@ -118,7 +118,7 @@ gulp.task('back-6to5', function () {
         .pipe(gulp.dest('dist/node/back/'));
 });
 
-gulp.task('back-server', function () {
+gulp.task('back-server', ['back-6to5'], function () {
     return server.run({
         file: 'dist/node/back/server.js'
     });
@@ -130,13 +130,12 @@ gulp.task('watch', function () {
     gulp.watch(paths.front.styles, ['front-scss']);
     gulp.watch('front/index.html', ['front-html']);
     // Back
-    gulp.watch(paths.back.js, ['back-6to5', 'back-server']);
+    gulp.watch(paths.back.js, ['back-server']);
 });
 
 gulp.task('default', ['front-material-design',
                       'front-scss',
                       'front-html',
-                      'front-6to5',
                       'jslibs',
                       'csslibs',
                       'back-6to5',
