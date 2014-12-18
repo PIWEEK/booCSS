@@ -9,3 +9,6 @@ node_modules/
 bower_components/
 dist/
 tmp/
+screenshots_diff/
+screenshots_ok/
+screenshots_pending/

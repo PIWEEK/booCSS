@@ -3,6 +3,7 @@ import {List} from './list';
 import {ListImages} from './listImages';
 import {ListActions} from './listActions';
 import api from '../api';
+import transformResponse from '../transformListResponse';
 
 var Link = window.ReactRouter.Link;
 
@@ -28,7 +29,7 @@ export var Tests = React.createClass({
     componentDidMount: function() {
         api.getTests().done((response) => {
             if (this.isMounted()) {
-                this.setState({mode: this.state.mode, filter: this.state.filter, tests: response});
+                this.setState({mode: this.state.mode, filter: this.state.filter, tests: transformResponse(response)});
             }
         });
     },

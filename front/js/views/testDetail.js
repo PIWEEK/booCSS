@@ -1,4 +1,5 @@
 import api from '../api';
+import transformResponse from '../transformListResponse';
 
 var Link = window.ReactRouter.Link;
 
@@ -97,7 +98,7 @@ var TestDetail = React.createClass({
     componentDidMount: function() {
         api.getTests().done((response) => {
             if (this.isMounted()) {
-                this.setState({tests: response});
+                this.setState({tests: transformListResponse(response)});
             }
         });
     },
