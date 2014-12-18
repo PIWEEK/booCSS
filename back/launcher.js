@@ -8,6 +8,8 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import * as gm from 'gm';
 
+import {getBackURL} from './server'
+
 // Vars
 var convert = new Convert({newline: true});
 
@@ -19,15 +21,15 @@ export class TestLauncher {
         this.outputDirPath = outputDirPath;
         this.outputFilePath = outputDirPath+path.sep+testId;
         this.screenshotsOkFolder = screenshotsOkFolder;
-        this. screenshotsPendingFolder = screenshotsPendingFolder;
+        this.screenshotsPendingFolder = screenshotsPendingFolder;
         this.screenshotsDiffFolder = screenshotsDiffFolder;
     }
 
     launch() {
         var promise = new Promise((resolve, reject) => {
             // we have two different processes here. One for executing the casper command ang reading the output and one for reading the output file
-            var casperOutputReader = new CasperOutputReader(this.testId, this.outputDirPath, this.outputFilePath, this.screenshotsOkFolder, this.screenshotsDiffFolder);
-            var casperLauncher = new CasperLauncher(this.testId, this.testFilePath, this.outputFilePath, this.screenshotsPendingFolder, this.screenshotsDiffFolder);
+            var casperOutputReader = new CasperOutputReader(this.testId, this.outputDirPath, this.outputFilePath, this.screenshotsOkFolder, this.screenshotsPendingFolder, this.screenshotsDiffFolder);
+            var casperLauncher = new CasperLauncher(this.testId, this.testFilePath, this.outputFilePath, this.screenshotsPendingFolder);
             var promiseCasperOutputReader = casperOutputReader.read();
             var promiseCasperLauncher = casperLauncher.launch();
 
@@ -48,7 +50,7 @@ class CasperLauncher {
         if (fs.existsSync(outputFilePath)){
             fs.removeSync(outputFilePath);
         }
-        this. screenshotsPendingFolder = screenshotsPendingFolder;
+        this.screenshotsPendingFolder = screenshotsPendingFolder;
     }
 
     launch(){
@@ -67,11 +69,12 @@ class CasperLauncher {
 
 // In charge of reading the output file with the testing results when it's generated
 class CasperOutputReader {
-    constructor(testId, outputDirPath, outputFilePath, screenshotsOkFolder, screenshotsDiffFolder) {
+    constructor(testId, outputDirPath, outputFilePath, screenshotsOkFolder, screenshotsPendingFolder, screenshotsDiffFolder) {
         this.testId = testId;
         this.outputDirPath = outputDirPath;
         this.outputFilePath = outputFilePath;
         this.screenshotsOkFolder = screenshotsOkFolder;
+        this.screenshotsPendingFolder = screenshotsPendingFolder;
         this.screenshotsDiffFolder = screenshotsDiffFolder
     }
     read() {
@@ -106,7 +109,7 @@ class CasperOutputReader {
                 fs.createReadStream(screenshotCreatedPath).pipe(fs.createWriteStream(screenshotOkPath));
                 resolve({
                     error: false,
-                    screenshot_ok: screenshotOkPath.split(this.screenshotsOkFolder)[1]
+                    screenshot_ok: getBackURL()+'/screenshots_ok'+screenshotOkPath.split(this.screenshotsOkFolder)[1]
                 });
             }else{
                 //A new screenshot and an existing one, let's compare them!
@@ -118,15 +121,15 @@ class CasperOutputReader {
                     if(!isEqual){
                         result = {
                             error: true,
-                            screenshot_ok: path1.split(this.screenshotsOkFolder)[1],
-                            screenshot_ko: path2.split(this.screenshotsPendingFolder)[1],
-                            screenshot_diff:  screenshotsDiffPath.split(this.screenshotsDiffFolder)[1]
+                            screenshot_ok: getBackURL()+'/screenshots_ok'+screenshotOkPath.split(this.screenshotsOkFolder)[1],
+                            screenshot_ko: getBackURL()+'/screenshots_pending'+screenshotCreatedPath.split(this.screenshotsPendingFolder)[1],
+                            screenshot_diff:  getBackURL()+'/screenshots_diff'+screenshotsDiffPath.split(this.screenshotsDiffFolder)[1]
                         }
                     }
                     else {
                         result = {
                             error: false,
-                            screenshot_ok: path1.split(this.screenshotsOkFolder)[1]
+                            screenshot_ok: getBackURL()+'/screenshots_ok'+path1.split(this.screenshotsOkFolder)[1]
                         }
                     }
                     resolve(result);

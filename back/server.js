@@ -10,6 +10,11 @@ import * as bodyParser from 'body-parser';
 import handlers from './handlers';
 import {routesSetup} from './routes';
 
+// Exports
+export function getBackURL(){
+    return `http://${host}:${port}`;
+}
+
 // Constants
 const PORT = 3000;
 
@@ -25,8 +30,8 @@ app.use(validator());
 
 routesSetup(app, handlers);
 
-var server = app.listen(PORT, () => {
-    var host = server.address().address;
-    var port = server.address().port;
-    console.log(`API listening at http://${host}:${port}`);
-});
+var server = app.listen(PORT);
+var host = server.address().address;
+var port = server.address().port;
+
+console.log(`API listening at ${getBackURL()}`);

@@ -14,6 +14,15 @@ import {TESTS_PATH,
 /* Routes Setup
 /************************************/
 export function routesSetup(app, handlers){
+    // static
+    app.use('/tests', serveIndex(TESTS_PATH));
+    app.use('/tests', express.static(TESTS_PATH));
+    app.use('/screenshots_ok', serveIndex(SCREENSHOTS_OK_FOLDER_PATH));
+    app.use('/screenshots_ok', express.static(SCREENSHOTS_OK_FOLDER_PATH));
+    app.use('/screenshots_pending', serveIndex(SCREENSHOTS_PENDING_FOLDER_PATH));
+    app.use('/screenshots_pending', express.static(SCREENSHOTS_PENDING_FOLDER_PATH));
+    app.use('/screenshots_diff', serveIndex(SCREENSHOTS_DIFF_FOLDER_PATH));
+    app.use('/screenshots_diff', express.static(SCREENSHOTS_DIFF_FOLDER_PATH));
 
     // /api/*
     app.all('/*', function(req, res, next) {
