@@ -104,7 +104,10 @@ class CasperOutputReader {
             //If there is no valid version for this screenshot then this is the valid version
             if (! fs.existsSync(screenshotOkPath)) {
                 fs.createReadStream(screenshotCreatedPath).pipe(fs.createWriteStream(screenshotOkPath));
-                resolve({error: false, screenshot_ok: screenshotOkPath});
+                resolve({
+                    error: false,
+                    screenshot_ok: screenshotOkPath.split(this.screenshotsOkFolder)[1]
+                });
             }else{
                 //A new screenshot and an existing one, let's compare them!
                 var screenshotsDiffPath = this.screenshotsDiffFolder+path.sep+screenshotFileName;
@@ -115,15 +118,15 @@ class CasperOutputReader {
                     if(!isEqual){
                         result = {
                             error: true,
-                            screenshot_ok:  path1,
-                            screenshot_ko: path2,
-                            screenshot_diff:  screenshotsDiffPath
+                            screenshot_ok: path1.split(this.screenshotsOkFolder)[1],
+                            screenshot_ko: path2.split(this.screenshotsPendingFolder)[1],
+                            screenshot_diff:  screenshotsDiffPath.split(this.screenshotsDiffFolder)[1]
                         }
                     }
                     else {
                         result = {
                             error: false,
-                            screenshot_ok: path1
+                            screenshot_ok: path1.split(this.screenshotsOkFolder)[1]
                         }
                     }
                     resolve(result);

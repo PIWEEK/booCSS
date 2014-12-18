@@ -16,11 +16,11 @@ export const BASE_TEST_FILE = `${__dirname}/../../../test_base.js`;
 
 export const CASPER_OUTPUT_FOLDER_PATH = `${__dirname}/../../../output`;
 mkdirIfNotExist(CASPER_OUTPUT_FOLDER_PATH);
-export const SCREENSHOTS_OK_FOLDER_PATH = `${__dirname}/../../../screenshots_ok`;
+export const SCREENSHOTS_OK_FOLDER_PATH = `${__dirname}/../../images/screenshots_ok`;
 mkdirIfNotExist(SCREENSHOTS_OK_FOLDER_PATH);
-export const SCREENSHOTS_PENDING_FOLDER_PATH = `${__dirname}/../../../screenshots_pending`;
+export const SCREENSHOTS_PENDING_FOLDER_PATH = `${__dirname}/../../images/screenshots_pending`;
 mkdirIfNotExist(SCREENSHOTS_PENDING_FOLDER_PATH);
-export const SCREENSHOTS_DIFF_FOLDER_PATH = `${__dirname}/../../../screenshots_diff`;
+export const SCREENSHOTS_DIFF_FOLDER_PATH = `${__dirname}/../../images/screenshots_diff`;
 mkdirIfNotExist(SCREENSHOTS_DIFF_FOLDER_PATH);
 
 export const DB_PATH = `${__dirname}/../../../db/booCSS.db`;
