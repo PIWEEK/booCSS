@@ -7,13 +7,16 @@ body {
 }
 
 .btn.btn-fab i {
-    color: #fff;
     height: 20px;
     line-height: 20px;
     text-align: center;
     top: -4px;
     vertical-align: middle;
     width: 20px;
+}
+
+.btn i {
+    color: #fff;
 }
 
 .glyphicon-refresh-animate {

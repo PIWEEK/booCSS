@@ -6,18 +6,19 @@ var Link = window.ReactRouter.Link;
 
 var TestHeader =  React.createClass({
     mixins: [TestActions],
-    loaderIconClass: 'mdi-navigation-refresh',
+    launchClass: 'mdi-navigation-refresh',
     getInitialState: function() {
-        return {className: this.loaderIconClass}
+        return {launchClass: this.launchClass}
     },
     componentDidMount: function() {
         $.material.init();
     },
     componentWillReceiveProps: function() {
-        this.setState({className: this.loaderIconClass});
+        this.setState({launchClass: this.launchClass});
     },
     handleLaunch: _.debounce(function(test) {
-        this.setState({className: this.loaderIconClass + ' glyphicon-refresh-animate'});
+        this.state.launchClass = this.launchClass + ' glyphicon-refresh-animate';
+        this.setState(this.state);
 
         this.launch(test).done(() => {
             this.props.onChange();
@@ -33,7 +34,7 @@ var TestHeader =  React.createClass({
                 <h1>{test.name}</h1>
 
                 <div>
-                    <button title="Launch" onClick={this.handleLaunch.bind(null, test)} className="btn btn-fab btn-fab-mini btn-raised btn-material-deeporange"><i className={this.state.className}></i></button>
+                    <button title="Launch" onClick={this.handleLaunch.bind(null, test)} className="btn btn-fab btn-fab-mini btn-raised btn-material-deeporange"><i className={this.state.launchClass}></i></button>
                     <button title="Delete" data-toggle="modal" data-target="#delete-dialog" className="btn btn-fab btn-fab-mini btn-raised btn-danger delete"><i className="mdi-action-delete"></i></button>
                 </div>
             </div>
@@ -42,6 +43,22 @@ var TestHeader =  React.createClass({
 });
 
 var TestDetailFail = React.createClass({
+    mixins: [TestActions],
+    resolveClass: 'mdi-navigation-check',
+    getInitialState: function() {
+        return {resolveClass: this.resolveClass}
+    },
+    componentWillReceiveProps: function() {
+        this.setState({resolveClass: this.resolveClass});
+    },
+    handleResolve: _.debounce(function(test) {
+        this.state.resolveClass = 'mdi-navigation-refresh glyphicon-refresh-animate';
+        this.setState(this.state);
+
+        this.resolve(test).done(() => {
+            this.props.onChange();
+        });
+    }, 2000, {leading: true, trailing: false}),
     render: function() {
         var test = this.props.test;
 
@@ -60,8 +77,8 @@ var TestDetailFail = React.createClass({
                     <TestHeader onChange={this.props.onChange} test={test} />
                     <div className="select-buttons">
                         <div className="wrap">
-                            <button className="btn btn-raised btn-success">
-                                <i className="mdi-navigation-check"></i>
+                            <button onClick={this.handleResolve.bind(null, test)} className="btn btn-raised btn-success">
+                                <i className={this.state.resolveClass}></i>
                             </button>
                             {nextButton}
                         </div>
