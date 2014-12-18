@@ -35,6 +35,8 @@ export class TestLauncher {
 
             Promise.all([promiseCasperOutputReader, promiseCasperLauncher]).then((result) => {
                 resolve( {results: result[0], output: result[1], lastExecutionDate: this.lastExecutionDate});
+            }, (error) => {
+                console.log("ERROR: ", error);
             });
         });
         return promise;
@@ -54,9 +56,9 @@ class CasperLauncher {
     }
 
     launch(){
-        console.log(`LAUNCHING: casperjs test ${this.testFilePath} --testId=${this.testId} --outputFile=${this.outputFilePath} --screenshotsFolder=${this.screenshotsPendingFolder}`);
+        console.log(`LAUNCHING: casperjs --verbose test ${this.testFilePath} --testId=${this.testId} --outputFile=${this.outputFilePath} --screenshotsFolder=${this.screenshotsPendingFolder}`);
         var promise = new Promise((resolve, reject) => {
-            buffspawn('casperjs', ['test', this.testFilePath, '--testId='+this.testId, '--outputFile='+this.outputFilePath, '--screenshotsFolder='+this.screenshotsPendingFolder])
+            buffspawn('casperjs', ['--verbose', 'test', this.testFilePath, '--testId='+this.testId, '--outputFile='+this.outputFilePath, '--screenshotsFolder='+this.screenshotsPendingFolder])
             .progress((buff) => { console.log("Progress: ", buff.toString());})
             .spread((stdout, stderr) => {
                 resolve(convert.toHtml(stdout, stderr));
@@ -94,6 +96,8 @@ class CasperOutputReader {
                     Promise.all(resultPromises).then((results) => {
                         fs.unlinkSync(this.outputFilePath);
                         resolve(results);
+                    }, (error) => {
+                        console.log("ERROR: ", error);
                     });
                 }
             });
@@ -105,8 +109,14 @@ class CasperOutputReader {
         var screenshotFileName = screenshotCreatedPath.split(path.sep).slice(-1)[0];
         var screenshotOkPath = this.screenshotsOkFolder+path.sep+screenshotFileName;
         var promise = new Promise((resolve, reject) => {
+            //The created file could not exist if there was a fail
+            if (! fs.existsSync(screenshotCreatedPath)){
+                resolve({
+                    error: true
+                });
+            }
             //If there is no valid version for this screenshot then this is the valid version
-            if (! fs.existsSync(screenshotOkPath)) {
+            else if (! fs.existsSync(screenshotOkPath)) {
                 fs.createReadStream(screenshotCreatedPath).pipe(fs.createWriteStream(screenshotOkPath));
                 resolve({
                     error: false,
