@@ -152,7 +152,7 @@ gulp.task('default', ['front-material-design',
                       'front-images',
                       'jslibs',
                       'csslibs',
-                      'back-6to5',
+                      'front-6to5',
                       'back-server',
                       'watch',
                       'front-server']);
