@@ -34,7 +34,7 @@ var Item = React.createClass({
             <div className="wrap">
                 <div className="content">
                     <h2><Link to="test" params={{testId: test._id}}>{test.name}</Link></h2>
-                    <p className="date">{test.date}</p>
+                    <p className="date">{test.lastExecutionDate}</p>
                 </div>
                 <div className="actions">
                     {resolve}
