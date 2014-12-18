@@ -53,13 +53,13 @@ var TestDetailFail = React.createClass({
                     </div>
                     <div className="images">
                         <div className="original image">
-                            <img src={test.original} />
+                            <img src={test.screenshots_ok} />
                         </div>
                         <div className="new image">
-                            <img src={test.original} />
+                            <img src={test.screenshots_pending} />
                         </div>
                         <div className="diff image">
-                            <img src={test.diff} />
+                            <img src={test.screenshots_diff} />
                         </div>
                     </div>
                 </div>
@@ -77,7 +77,7 @@ var TestDetailSuccess = React.createClass({
                 <div className="inner">
                     <TestHeader test={test} />
                     <div className="image">
-                        <img src={test.original} />
+                        <img src={test.screenshots_ok} />
                     </div>
                 </div>
             </div>
@@ -98,7 +98,7 @@ var TestDetail = React.createClass({
     componentDidMount: function() {
         api.getTests().done((response) => {
             if (this.isMounted()) {
-                this.setState({tests: transformListResponse(response)});
+                this.setState({tests: transformResponse(response)});
             }
         });
     },
@@ -110,7 +110,7 @@ var TestDetail = React.createClass({
         var detail;
 
         if (test) {
-            if (test.error) {
+            if (!test.error) {
                 detail = <TestDetailSuccess test={test} />
             } else {
                 var failed = _.filter(this.state.tests, {error: false});

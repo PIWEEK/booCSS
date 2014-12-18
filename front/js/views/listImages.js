@@ -48,6 +48,8 @@ export var ListImages = React.createClass({
 
             var resolve = '';
 
+            var image = test.screenshot_pending ? test.screenshot_pending : test.screenshot_ok;
+
             if (test.error) {
                 resolve = <button title="Resolve" className="btn btn-fab btn-fab-mini btn-raised btn-sm btn-success"><i className="mdi-navigation-check"></i></button>
             }
@@ -55,7 +57,7 @@ export var ListImages = React.createClass({
             return (
                 <div className="test-item-image">
                     <div className="image-wrapper">
-                        <img src={test.image} />
+                        <img src={image} />
                         <div className="actions">
                              <div>
                                  {resolve}
