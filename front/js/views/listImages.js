@@ -27,19 +27,35 @@ function checkVisibles() {
 
 var Item = React.createClass({
     mixins: [TestActions, window.ReactRouter.Navigation],
-    loaderIconClass: 'mdi-navigation-refresh',
+    launchClass: 'mdi-navigation-refresh',
+    resolveClass: 'mdi-navigation-check',
     getInitialState: function() {
-        return {className: this.loaderIconClass}
+        return {
+            launchClass: this.launchClass,
+            resolveClass: this.resolveClass
+        }
     },
     handleLaunch: _.debounce(function(test) {
-        this.setState({className: this.loaderIconClass + ' glyphicon-refresh-animate'});
+        this.state.launchClass = this.launchClass + ' glyphicon-refresh-animate';
+        this.setState(this.state);
 
         this.launch(test).done(() => {
             this.props.onChange();
         });
     }, 2000, {leading: true, trailing: false}),
+    handleResolve: _.debounce(function(test) {
+        this.state.resolveClass = 'mdi-navigation-refresh glyphicon-refresh-animate';
+        this.setState(this.state);
+
+        this.resolve(test).done(() => {
+            this.props.onChange();
+        });
+    }, 2000, {leading: true, trailing: false}),
     componentWillReceiveProps: function() {
-        this.setState({className: this.loaderIconClass});
+        this.setState({
+            launchClass: this.launchClass,
+            resolveClass: this.resolveClass
+        });
     },
     render: function() {
         var test = this.props.test;
@@ -48,7 +64,7 @@ var Item = React.createClass({
         var resolve = '';
 
         if (test.error) {
-            resolve = <button title="Resolve" className="btn btn-fab btn-fab-mini btn-raised btn-sm btn-success"><i className="mdi-navigation-check"></i></button>
+            resolve = <button title="Resolve" onClick={this.handleResolve.bind(null, test)} className="btn btn-fab btn-fab-mini btn-raised btn-sm btn-success"><i className={this.state.resolveClass}></i></button>
         }
 
         return (
@@ -58,7 +74,7 @@ var Item = React.createClass({
                 <div className="actions">
                      <div>
                          {resolve}
-                         <button title="Launch" onClick={this.handleLaunch.bind(null, test)} className="btn btn-fab btn-fab-mini btn-raised btn-material-deeporange"><i className={this.state.className}></i></button>
+                         <button title="Launch" onClick={this.handleLaunch.bind(null, test)} className="btn btn-fab btn-fab-mini btn-raised btn-material-deeporange"><i className={this.state.launchClass}></i></button>
                      </div>
                 </div>
             </div>
