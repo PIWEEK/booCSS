@@ -54,8 +54,8 @@ class CasperLauncher {
     }
 
     launch(){
+        console.log(`LAUNCHING: casperjs test ${this.testFilePath} --testId=${this.testId} --outputFile=${this.outputFilePath} --screenshotsFolder=${this.screenshotsPendingFolder}`);
         var promise = new Promise((resolve, reject) => {
-            console.log(`casperjs test ${this.testFilePath} --testId=${this.testId} --outputFile=${this.outputFilePath} --screenshotsFolder=${this.screenshotsPendingFolder}`);
             buffspawn('casperjs', ['test', this.testFilePath, '--testId='+this.testId, '--outputFile='+this.outputFilePath, '--screenshotsFolder='+this.screenshotsPendingFolder])
             .progress((buff) => { console.log("Progress: ", buff.toString());})
             .spread((stdout, stderr) => {
