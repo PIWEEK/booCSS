@@ -51,8 +51,14 @@ var tests = {
                 });
             });
 
-            db.tests.update({_id: doc._id}, {$set: {file: outputFile}}, {multi: false}, (err, numReplaced) => {
-                console.log('CREATE: ', doc);
+            var test =  new TestLauncher(doc._id, outputFile, CASPER_OUTPUT_FOLDER_PATH, SCREENSHOTS_PENDING_FOLDER_PATH, SCREENSHOTS_OK_FOLDER_PATH, SCREENSHOTS_DIFF_FOLDER_PATH);
+            test.launch().then((updatedData) => {
+                updatedData.file = outputFile;
+                db.tests.update({_id: doc._id}, {$set: updatedData});
+                doc.results = updatedData.results;
+                doc.output = updatedData.output;
+                doc.file = outputFile
+                doc.lastExecutionDate = updatedData.lastExecutionDate;
                 res.json(doc);
             });
         });
@@ -103,7 +109,7 @@ var tests = {
                 doc.results = updatedData.results;
                 doc.output = updatedData.output;
                 doc.lastExecutionDate = updatedData.lastExecutionDate;
-                res.send(doc);
+                res.json(doc);
             });
         });
     }
