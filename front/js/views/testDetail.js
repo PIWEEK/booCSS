@@ -106,16 +106,17 @@ var TestDetail = React.createClass({
     render: function() {
         var routeParams = this.getParams();
         var testId = routeParams.testId;
+        console.log(testId);
         var test = _.find(this.state.tests, {_id: testId});
-
+        console.log(test);
         var detail;
 
         if (test) {
             if (!test.error) {
                 detail = <TestDetailSuccess test={test} />
             } else {
-                var failed = _.filter(this.state.tests, {error: false});
-                var testIndex = _.findIndex(failed, {id: testId});
+                var failed = _.filter(this.state.tests, {error: true});
+                var testIndex = _.findIndex(failed, {_id: testId});
 
                 var nextTestIndex = testIndex + 1;
                 var nextTest;
