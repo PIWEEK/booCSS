@@ -89,8 +89,8 @@ var TestDetail = React.createClass({
     },
     render: function() {
         var routeParams = this.getParams();
-        var testId = parseInt(routeParams.testId, 10);
-        var test = _.find(this.props.tests, {id: testId});
+        var testId = routeParams.testId;
+        var test = _.find(this.props.tests, {_id: testId});
 
         var detail;
 

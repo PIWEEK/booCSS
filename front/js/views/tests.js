@@ -22,6 +22,9 @@ export var Tests = React.createClass({
 
         return state;
     },
+    // componentDidMount: function() {
+    //     console.log("did mount 2");
+    // },
     setMode: function(mode) {
         var state = {mode: mode, filter: this.state.filter};
 

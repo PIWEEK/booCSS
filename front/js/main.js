@@ -20,6 +20,7 @@ var App = React.createClass({
         });
     },
     componentDidMount: function() {
+        console.log("did mount");
         this.getTests();
     },
     render: function () {
