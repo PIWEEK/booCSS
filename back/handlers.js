@@ -67,7 +67,7 @@ var tests = {
         if (errors) {
             res.status(400).json(errors).end();
         }
-
+        req.body.results = [{error: true}];
         db.tests.insert(req.body, (err, doc) => {
             if (err) {
                 res.status(400).json(err).end();

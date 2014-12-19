@@ -16,6 +16,6 @@ casper.then(function() {
 });
 
 casper.run(function(){
-	fs.write(outputFile, JSON.stringify(screenshots), 'w')
+	fs.write(outputFile, JSON.stringify(screenshots), 'w');
 	this.exit();
 });

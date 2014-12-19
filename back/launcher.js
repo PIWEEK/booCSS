@@ -40,13 +40,11 @@ export class TestLauncher {
             // we have two different processes here. One for executing the casper command ang reading the output and one for reading the output file
             var casperOutputReader = new CasperOutputReader(this.testId, this.outputDirPath, this.outputFilePath, this.screenshotsOkFolder, this.screenshotsPendingFolder, this.screenshotsDiffFolder);
             var casperLauncher = new CasperLauncher(this.testId, this.testFilePath, this.outputFilePath, this.screenshotsPendingFolder);
-            var promiseCasperOutputReader = casperOutputReader.read();
-            var promiseCasperLauncher = casperLauncher.launch();
 
-            Promise.all([promiseCasperOutputReader, promiseCasperLauncher]).then((result) => {
-                resolve( {results: result[0], output: result[1], lastExecutionDate: this.lastExecutionDate});
-            }, (error) => {
-                console.log("ERROR: ", error);
+            casperLauncher.launch().then((output) => {
+                casperOutputReader.read().then((result) => {
+                    resolve( {results: result, output: output, lastExecutionDate: this.lastExecutionDate});
+                });
             });
         });
         return promise;
@@ -68,7 +66,7 @@ class CasperLauncher {
     launch(){
         console.log(`LAUNCHING: casperjs --verbose --engine=slimerjs  test ${this.testFilePath} --testId=${this.testId} --outputFile=${this.outputFilePath} --screenshotsFolder=${this.screenshotsPendingFolder}`);
         var promise = new Promise((resolve, reject) => {
-            buffspawn('casperjs', ['--verbose', 'test', this.testFilePath, '--testId='+this.testId, '--outputFile='+this.outputFilePath, '--screenshotsFolder='+this.screenshotsPendingFolder])
+            buffspawn('casperjs', ['--verbose', '--engine=slimerjs', 'test', this.testFilePath, '--testId='+this.testId, '--outputFile='+this.outputFilePath, '--screenshotsFolder='+this.screenshotsPendingFolder])
             .progress((buff) => { console.log("Progress: ", buff.toString());})
             .spread((stdout, stderr) => {
                 resolve(convert.toHtml(stdout, stderr));
@@ -92,24 +90,19 @@ class CasperOutputReader {
     }
     read() {
         var promise = new Promise((resolve, reject) => {
-            var watcher = fs.watch(this.outputDirPath, (event, who) => {
-                if (event === 'rename' && who === this.testId) {
-                    watcher.close();
-                    var screenshotCreatedPaths = JSON.parse(fs.readFileSync(this.outputFilePath, 'utf8'));
-                    var resultPromises = [];
-                    //The file contain a json with an array of screenshot paths
-                    for (let screenshotCreatedPath of screenshotCreatedPaths) {
-                        var resultPromise = this.createResultPromise(screenshotCreatedPath);
-                        resultPromises.push(resultPromise);
-                    }
+            var screenshotCreatedPaths = JSON.parse(fs.readFileSync(this.outputFilePath, 'utf8'));
+            var resultPromises = [];
+            //The file contain a json with an array of screenshot paths
+            for (let screenshotCreatedPath of screenshotCreatedPaths) {
+                var resultPromise = this.createResultPromise(screenshotCreatedPath);
+                resultPromises.push(resultPromise);
+            }
 
-                    Promise.all(resultPromises).then((results) => {
-                        fs.unlinkSync(this.outputFilePath);
-                        resolve(results);
-                    }, (error) => {
-                        console.log("ERROR: ", error);
-                    });
-                }
+            Promise.all(resultPromises).then((results) => {
+                fs.unlinkSync(this.outputFilePath);
+                resolve(results);
+            }, (error) => {
+                console.log("ERROR: ", error);
             });
         });
         return promise;

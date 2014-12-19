@@ -5,6 +5,10 @@ export default function(response) {
         let newItem = _.clone(item);
 
         delete newItem.results;
+
+        console.log(item);
+        console.log(item.results);
+        
         _.forEach(item.results, (result, index) => {
             newItem.testId = newItem._id;
             newItem.index = index;
@@ -36,7 +40,9 @@ export default function(response) {
             _.assign(newItem, result);
         });
 
-        list.push(newItem);
+        if(item.results){
+            list.push(newItem);
+        }
     });
 
     return list;
