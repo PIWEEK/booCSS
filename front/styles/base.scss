@@ -15,9 +15,16 @@ body {
     width: 20px;
 }
 
+.btn-raised,
 .btn-raised i,
 .btn-raised span {
-    color: #fff;
+    &:not(.btn-default) {
+        color: #fff;
+        &:hover,
+        &:focus {
+            color: #fff;
+        }
+    }
 }
 
 .glyphicon-refresh-animate {
