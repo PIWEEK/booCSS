@@ -4,6 +4,8 @@ var outputFile = casper.cli.options.outputFile;
 var screenshotsFolder = casper.cli.options.screenshotsFolder;
 var screenshots = []
 
+casper.options.logLevel = "info";
+casper.options.verbose = true;
 casper.start( 'TEST_URL' );
 casper.viewport(1024, 768);
 

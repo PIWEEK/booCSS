@@ -34,6 +34,7 @@ var TestHeader =  React.createClass({
                 <h1>{test.name}</h1>
 
                 <div>
+                    <button title="Info" data-toggle="modal" data-target="#info-dialog" className="btn btn-fab btn-fab-mini btn-raised btn-info info"><i className="mdi-action-info"></i></button>
                     <button title="Launch" onClick={this.handleLaunch.bind(null, test)} className="btn btn-fab btn-fab-mini btn-raised btn-material-deeporange"><i className={this.state.launchClass}></i></button>
                     <button title="Delete" data-toggle="modal" data-target="#delete-dialog" className="btn btn-fab btn-fab-mini btn-raised btn-danger delete"><i className="mdi-action-delete"></i></button>
                 </div>
@@ -130,6 +131,9 @@ var TestDetail = React.createClass({
             this.transitionTo('main');
         });
     },
+    closeInfoDialog: function(test){
+        $('#info-dialog').modal('hide');
+    },
     loadTests: function() {
         api.getTests().done((response) => {
             if (this.isMounted()) {
@@ -148,8 +152,10 @@ var TestDetail = React.createClass({
         var testId = routeParams.testId;
         var test = _.find(this.state.tests, {_id: testId});
         var detail;
+        var output;
 
         if (test) {
+            output = test.output;
             if (!test.error) {
                 detail = <TestDetailSuccess test={test} onChange={this.onChange} />
             } else {
@@ -189,6 +195,23 @@ var TestDetail = React.createClass({
                         </div>
                     </div>
                 </div>
+
+                <div id="info-dialog" className="info-dialog modal fade" tabindex="-1">
+                    <div className="modal-dialog modal-lg">
+                        <div className="modal-content">
+                            <div className="modal-body">
+                                <h2>Test debug info</h2>
+                                <div dangerouslySetInnerHTML={{__html: output}}/>
+                                <div className="options">
+                                    <button onClick={this.closeInfoDialog.bind(null, test)} className="btn btn-primary btn-flat">
+                                        <i className="mdi-navigation-check"></i> Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         );
   }
