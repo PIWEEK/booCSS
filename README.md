@@ -1,5 +1,10 @@
+![booCSS](https://raw.githubusercontent.com/PIWEEK/booCSS/master/booCSS.png)
+
 booCSS
 ======
+![Kaleidos Project](http://kaleidos.net/static/img/badge.png "Kaleidos Project")
+
+booCSS is a pure javascript tool For testing Web apps, live style guides and responsive layouts.
 
 ## Setup initial environment ##
 
@@ -18,3 +23,6 @@ $ bower install
 ```
 $ bower
 ```
+
+This project is developed under the 7th PIWEEK initiative. 
+
