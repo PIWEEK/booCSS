@@ -1,5 +1,6 @@
 require('6to5/polyfill');
 
+
 // Imports
 import * as Convert from 'ansi-to-html';
 import * as buffspawn from 'buffered-spawn';
@@ -9,12 +10,21 @@ import * as fs from 'fs-extra';
 import * as gm from 'gm';
 
 import {getBackURL} from './server'
+import {CASPER_OUTPUT_FOLDER_PATH,
+            SCREENSHOTS_OK_FOLDER_PATH,
+            SCREENSHOTS_PENDING_FOLDER_PATH,
+            SCREENSHOTS_DIFF_FOLDER_PATH} from './settings';
 
 // Vars
 var convert = new Convert({newline: true});
 
 export class TestLauncher {
-    constructor(testId, testFilePath, outputDirPath, screenshotsOkFolder, screenshotsPendingFolder, screenshotsDiffFolder) {
+    constructor(testId,
+                testFilePath,
+                outputDirPath=CASPER_OUTPUT_FOLDER_PATH,
+                screenshotsOkFolder=SCREENSHOTS_OK_FOLDER_PATH,
+                screenshotsPendingFolder=SCREENSHOTS_PENDING_FOLDER_PATH,
+                screenshotsDiffFolder=SCREENSHOTS_DIFF_FOLDER_PATH) {
         this.lastExecutionDate = new Date();
         this.testId = testId;
         this.testFilePath = testFilePath;

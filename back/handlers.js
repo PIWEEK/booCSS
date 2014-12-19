@@ -8,10 +8,10 @@ import * as fs from 'fs-extra';
 import * as replace from 'replace';
 import {TESTS_PATH,
             BASE_TEST_FILE,
-            CASPER_OUTPUT_FOLDER_PATH,
             SCREENSHOTS_OK_FOLDER_PATH,
             SCREENSHOTS_PENDING_FOLDER_PATH,
             SCREENSHOTS_DIFF_FOLDER_PATH} from './settings';
+
 
 // Utils functions
 function resolveTest(doc, index, callback) {
@@ -82,7 +82,7 @@ var tests = {
                     paths: [outputFile]
                 });
             });
-            var test =  new TestLauncher(doc._id, outputFile, CASPER_OUTPUT_FOLDER_PATH, SCREENSHOTS_OK_FOLDER_PATH, SCREENSHOTS_PENDING_FOLDER_PATH, SCREENSHOTS_DIFF_FOLDER_PATH);
+            var test =  new TestLauncher(doc._id, outputFile);
             test.launch().then((updatedData) => {
                 updatedData.file = outputFile;
                 db.tests.update({_id: doc._id}, {$set: updatedData});
@@ -134,7 +134,7 @@ var tests = {
 
     launch: (req, res) => {
         db.tests.findOne({_id: req.param("id")}, (err, doc) => {
-            var test =  new TestLauncher(doc._id, doc.file, CASPER_OUTPUT_FOLDER_PATH, SCREENSHOTS_OK_FOLDER_PATH, SCREENSHOTS_PENDING_FOLDER_PATH, SCREENSHOTS_DIFF_FOLDER_PATH);
+            var test =  new TestLauncher(doc._id, doc.file);
             test.launch().then((updatedData) => {
                 db.tests.update({_id: doc._id}, {$set: updatedData}, {});
                 doc.results = updatedData.results;
