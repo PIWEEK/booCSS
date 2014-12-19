@@ -23,6 +23,6 @@ $ bower install
 ```
 $ bower
 ```
+## Acknowledges
 
-This project is developed under the 7th PIWEEK initiative. 
-
+This project is developed under the 7th PIWEEK initiative by @juanfran, @superalex and @bameda. booCSS logo by @elhombretecla. 
