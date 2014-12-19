@@ -28,7 +28,7 @@ export var ListActions = React.createClass({
         return (
             <div className="list-actions">
                 <div className="wrapper">
-                    <button onClick={this.handleResolveAll.bind(null)} className="btn btn-material-teal btn-raised btn-resolve-all">
+                    <button onClick={this.handleResolveAll.bind(null)} className="btn btn-material-teal btn-raised btn-resolve-all btn-loader-text">
                         <span className={this.state.resolveAllClass}></span> Check All
                     </button>
                     {button}

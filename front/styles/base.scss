@@ -27,6 +27,15 @@ body {
     }
 }
 
+.btn-loader-text {
+    span {
+        display: inline-block;
+        &:first-child {
+            margin-right: .5rem;
+        }
+    }
+}
+
 .glyphicon-refresh-animate {
     animation: spin .7s infinite linear;
 }

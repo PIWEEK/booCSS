@@ -3,6 +3,10 @@ import api from '../api';
 var Link = window.ReactRouter.Link;
 
 var NewForm = React.createClass({
+    createClass: '',
+    getInitialState: function() {
+        return {createClass: this.createClass}
+    },
     mixins: [window.ReactRouter.Navigation],
     componentDidMount: function() {
         $.material.init();
@@ -16,9 +20,8 @@ var NewForm = React.createClass({
         test.url =  this.refs.url.getDOMNode().value;
         test.description =  this.refs.description.getDOMNode().value;
 
-        $(this.getDOMNode())
-            .find('.glyphicon-refresh-animate')
-            .removeClass('hidden');
+        this.state.createClass = 'mdi-navigation-refresh glyphicon-refresh-animate';
+        this.setState(this.state);
 
         api.createTest(test).done((response) => {
             this.transitionTo('main');
@@ -39,8 +42,8 @@ var NewForm = React.createClass({
                     <textarea required className="form-control" ref="description" placeholder="Description"></textarea>
                 </div>
                 <div className="form-group">
-                    <button type="submit" className="btn btn-primary btn-raised">
-                        <span className="glyphicon glyphicon-refresh glyphicon-refresh-animate hidden"></span> Create
+                    <button type="submit" className="btn btn-primary btn-raised btn-loader-text">
+                        <span className={this.state.createClass}></span> Create
                     </button>
                     <Link to="main" title="Cancel" className="btn btn-default btn-raised">Cancel</Link>
                 </div>
