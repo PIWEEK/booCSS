@@ -19,7 +19,7 @@ $ sudo npm install -g gulp
 $ npm install
 $ bower install
 ```
-7. Launch bower
+6. Launch bower
 ```
 $ bower
 ```
