@@ -24,6 +24,6 @@ export default {
     },
     resolveAllTests: function() {
         var path = '/resolve';
-        return $.post(root + url + path, {});
+        return $.post(root + url + path);
     }
 };

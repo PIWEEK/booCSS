@@ -9,7 +9,6 @@ export var ListActions = React.createClass({
     handleResolveAll: _.debounce(function() {
         this.state.resolveAllClass = 'mdi-navigation-refresh glyphicon-refresh-animate';
         this.setState(this.state);
-
         this.resolveAll().done(() => {
             this.props.onChange();
         });

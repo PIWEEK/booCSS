@@ -179,7 +179,7 @@ var tests = {
                     }
                 }
             }
-            res.status(200).end();
+            res.json({}).status(200).end();
         });
     }
 }
