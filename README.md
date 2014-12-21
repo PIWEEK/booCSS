@@ -4,7 +4,7 @@ booCSS
 ======
 ![Kaleidos Project](http://kaleidos.net/static/img/badge.png "Kaleidos Project")
 
-booCSS is a pure javascript tool For testing Web apps, live style guides and responsive layouts.
+booCSS is a pure javascript tool for testing Web apps, live style guides and responsive layouts.
 
 ## Setup initial environment ##
 
